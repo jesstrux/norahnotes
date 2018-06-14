@@ -19,10 +19,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:textColor="#000"
+            android:textColor="#333"
             android:text="Notes 1"
             android:textSize="20dp"
+            android:textStyle="bold"
             android:maxLines="1"
+            android:paddingRight="30dp"
             android:ellipsize="end"/>
 
         <TextView
@@ -36,6 +38,7 @@
             android:textColor="#000"
             android:alpha="0.85"
             android:fontFamily="@font/lustria"
-            android:letterSpacing="0.06"/>
+            android:letterSpacing="0.06"
+            android:paddingRight="20dp"/>
     </LinearLayout>
 </android.support.v7.widget.CardView>

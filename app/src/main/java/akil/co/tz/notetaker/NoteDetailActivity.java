@@ -5,9 +5,13 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -31,18 +35,20 @@ public class NoteDetailActivity extends AppCompatActivity {
         mItem = (Post) bundle.getSerializable("post");
 
         setContentView(R.layout.activity_note_detail);
-        Toolbar toolbar = findViewById(R.id.detail_toolbar);
+        final AppBarLayout appBar = findViewById(R.id.app_bar);
+        final Toolbar toolbar = findViewById(R.id.detail_toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_chevron_left);
         toolbar.setTitle("");
 
-        LinearLayout title_bar = findViewById(R.id.title_bar);
-        TextView title = findViewById(R.id.title);
+        final LinearLayout title_bar = findViewById(R.id.title_bar);
+        final TextView title = findViewById(R.id.title);
 
-        String post_title = mItem.getTitle();
+        final String post_title = mItem.getTitle();
 
         if(post_title != null && post_title.length() > 0){
             title.setTextColor(Color.parseColor("#333333"));
             title.setText(post_title);
+//            toolbar.setTitle(post_title);
         }
 
         setSupportActionBar(toolbar);
@@ -55,6 +61,40 @@ public class NoteDetailActivity extends AppCompatActivity {
 
         TextView content = findViewById(R.id.note_detail);
         content.setText(mItem.getDetails());
+
+        NestedScrollView note_detail_container = findViewById(R.id.note_detail_container);
+        note_detail_container.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            public static final String TAG = "WOURA";
+
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+
+//                if (scrollY > oldScrollY) {
+//                    Log.i(TAG, "Scroll DOWN");
+//                }
+//                if (scrollY < oldScrollY) {
+//                    Log.i(TAG, "Scroll UP");
+//                }
+
+                Log.i(TAG, "SCROLL POS: " + scrollY);
+
+                if (scrollY <= 100) {
+                    Log.i(TAG, "BOTTOM SCROLL");
+                    appBar.setElevation(0);
+                    toolbar.setTitle("");
+                    title_bar.setVisibility(View.VISIBLE);
+                }else{
+                    Log.i(TAG, "TOP SCROLL");
+                    appBar.setElevation(5);
+                    toolbar.setTitle(post_title);
+                    title_bar.setVisibility(View.INVISIBLE);
+                }
+
+//                if (scrollY == ( v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight() )) {
+//
+//                }
+            }
+        });
 
 //        if (savedInstanceState == null) {
 //            Bundle arguments = new Bundle();

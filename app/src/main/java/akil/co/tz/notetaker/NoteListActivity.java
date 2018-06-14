@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +48,8 @@ public class NoteListActivity extends AppCompatActivity {
     private static final int SCROLL_DIRECTION_UP = -1;
     private Dialog postTitleDialog;
     private EditText title_name;
-    private Button submitTitleBtn, cancleTitleBtn;
+    private Button submitTitleBtn;
+    private ImageButton cancleTitleBtn;
     private TextView no_posts;
 
     @Override

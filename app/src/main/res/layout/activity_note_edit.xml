@@ -101,6 +101,7 @@
                 android:textSize="24dp"
                 android:textColor="#333"
                 android:background="#fff"
+                android:textStyle="bold"
                 android:layout_marginBottom="20dp"/>
 
             <View
@@ -126,6 +127,7 @@
             android:layout_marginTop="24dp"
             android:paddingLeft="24dp"
             android:paddingRight="24dp"
+            android:paddingBottom="12dp"
             android:gravity="top"
             android:textSize="20dp"
             android:fontFamily="@font/lustria"
