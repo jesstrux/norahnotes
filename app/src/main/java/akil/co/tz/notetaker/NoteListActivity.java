@@ -104,6 +104,11 @@ public class NoteListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_login:
+                Log.d("WOURA", "Add Clicked!!!");
+                login();
+
+                return true;
             case R.id.action_add:
                 Log.d("WOURA", "Add Clicked!!!");
                 createPost();
@@ -112,6 +117,10 @@ public class NoteListActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void login(){
+        startActivity(new Intent(this, LoginActivity.class));
     }
 
     private void createPost() {
