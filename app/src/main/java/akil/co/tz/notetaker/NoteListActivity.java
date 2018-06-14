@@ -54,6 +54,7 @@ public class NoteListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        startActivity(new Intent(this, PickVerseActivity.class));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_list);
 
