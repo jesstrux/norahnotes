@@ -3,22 +3,21 @@ package akil.co.tz.notetaker;
 import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.os.Build;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import akil.co.tz.notetaker.dummy.DummyContent;
+import akil.co.tz.notetaker.models.Post;
 
 public class NoteDetailFragment extends Fragment {
     public static final String ARG_ITEM_ID = "item_id";
-    private DummyContent.DummyItem mItem;
+    private Post mItem;
 
     public NoteDetailFragment() {
     }
@@ -33,11 +32,11 @@ public class NoteDetailFragment extends Fragment {
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.app_bar);
             if (appBarLayout != null) {
-                Boolean theme_is_pink = mItem.theme.equals("pink");
+                Boolean theme_is_pink = mItem.getTheme().equals("pink");
                 int bgRes = theme_is_pink ? R.color.colorPink : R.color.colorGreen;
                 int color = theme_is_pink ? Color.WHITE : Color.BLACK;
 
-                appBarLayout.setTitle(mItem.title);
+                appBarLayout.setTitle(mItem.getTitle());
                 appBarLayout.setBackgroundResource(bgRes);
                 appBarLayout.setContentScrimResource(bgRes);
                 appBarLayout.setCollapsedTitleTextColor(color);
@@ -66,7 +65,7 @@ public class NoteDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.note_detail, container, false);
 
         if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.note_detail)).setText(mItem.details);
+            ((TextView) rootView.findViewById(R.id.note_detail)).setText(mItem.getDetails());
         }
 
         return rootView;

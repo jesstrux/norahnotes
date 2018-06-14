@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import akil.co.tz.notetaker.models.Post;
+
 /**
  * Helper class for providing sample content for user interfaces created by
  * Android template wizards.
@@ -16,12 +18,12 @@ public class DummyContent {
     /**
      * An array of sample (dummy) items.
      */
-    public static final List<DummyItem> ITEMS = new ArrayList<DummyItem>();
+    public static final List<Post> ITEMS = new ArrayList<>();
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    public static final Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
+    public static final Map<Integer, Post> ITEM_MAP = new HashMap<Integer, Post>();
 
     private static final int COUNT = 25;
 
@@ -32,15 +34,15 @@ public class DummyContent {
         }
     }
 
-    private static void addItem(DummyItem item) {
+    private static void addItem(Post item) {
         ITEMS.add(item);
-        ITEM_MAP.put(item.id, item);
+        ITEM_MAP.put(item.getId(), item);
     }
 
-    private static DummyItem createDummyItem(int position) {
+    private static Post createDummyItem(int position) {
         String theme = position % 2 == 0 ? "pink" : "blue";
         String title = position % 3 == 0 ? null : "My wonderful post " + position;
-        return new DummyItem(String.valueOf(position), title, makeDetails(position), theme);
+        return new Post(position, title, makeDetails(position), theme);
     }
 
     private static String makeDetails(int position) {

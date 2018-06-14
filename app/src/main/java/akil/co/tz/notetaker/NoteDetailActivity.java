@@ -3,6 +3,7 @@ package akil.co.tz.notetaker;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,23 +14,36 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import akil.co.tz.notetaker.dummy.DummyContent;
+import akil.co.tz.notetaker.models.Post;
 
 public class NoteDetailActivity extends AppCompatActivity {
-    DummyContent.DummyItem mItem;
+    Post mItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mItem = DummyContent.ITEM_MAP.get(getIntent().getStringExtra(NoteDetailFragment.ARG_ITEM_ID));
+//        mItem = DummyContent.ITEM_MAP.get(getIntent().getStringExtra(NoteDetailFragment.ARG_ITEM_ID));
+        Bundle bundle = getIntent().getExtras();
+        mItem = (Post) bundle.getSerializable("post");
+
         setContentView(R.layout.activity_note_detail);
         Toolbar toolbar = findViewById(R.id.detail_toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_chevron_left);
-//        toolbar.setTitle(mItem.title);
-//        if(mItem.title == null || mItem.title.length() < 1)
-            toolbar.setTitle("");
+        toolbar.setTitle("");
+
+        LinearLayout title_bar = findViewById(R.id.title_bar);
+        TextView title = findViewById(R.id.title);
+
+        String post_title = mItem.getTitle();
+
+        if(post_title != null && post_title.length() > 0){
+            title.setTextColor(Color.parseColor("#333333"));
+            title.setText(post_title);
+        }
 
         setSupportActionBar(toolbar);
 
@@ -40,7 +54,7 @@ public class NoteDetailActivity extends AppCompatActivity {
 
 
         TextView content = findViewById(R.id.note_detail);
-        content.setText(mItem.details);
+        content.setText(mItem.getDetails());
 
 //        if (savedInstanceState == null) {
 //            Bundle arguments = new Bundle();
@@ -71,7 +85,9 @@ public class NoteDetailActivity extends AppCompatActivity {
                 Context context = getBaseContext();
                 Intent intent = new Intent(context, NoteEditActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("note_content", mItem.details);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("post", mItem);
+                intent.putExtras(bundle);
                 context.startActivity(intent);
                 return true;
             default:

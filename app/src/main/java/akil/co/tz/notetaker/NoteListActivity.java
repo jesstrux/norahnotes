@@ -1,8 +1,14 @@
 package akil.co.tz.notetaker;
 
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -12,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,31 +26,29 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import akil.co.tz.notetaker.Adapters.PostAdapter;
+import akil.co.tz.notetaker.Data.AppDatabase;
 import akil.co.tz.notetaker.dummy.DummyContent;
+import akil.co.tz.notetaker.models.Post;
+import akil.co.tz.notetaker.ui.dialogs.PostTitleDialog;
 
 import java.util.List;
 
-/**
- * An activity representing a list of Notes. This activity
- * has different presentations for handset and tablet-size devices. On
- * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link NoteDetailActivity} representing
- * item details. On tablets, the activity presents the list of items and
- * item details side-by-side using two vertical panes.
- */
 public class NoteListActivity extends AppCompatActivity {
-
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
     private boolean mTwoPane;
     private RecyclerView mRecyclerView;
     private static final int SCROLL_DIRECTION_UP = -1;
+    private Dialog postTitleDialog;
+    private EditText title_name;
+    private Button submitTitleBtn, cancleTitleBtn;
+    private TextView no_posts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,20 +59,18 @@ public class NoteListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
         final AppBarLayout appBar = findViewById(R.id.app_bar);
+        no_posts = findViewById(R.id.no_posts);
 
         if (findViewById(R.id.note_detail_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
             mTwoPane = true;
         }
+
+        postTitleDialog = new Dialog(this);
 
         mRecyclerView = findViewById(R.id.note_list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         assert mRecyclerView != null;
         setupRecyclerView(mRecyclerView);
-        final int initialTopPosition = mRecyclerView.getTop();
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -82,7 +85,6 @@ public class NoteListActivity extends AppCompatActivity {
                 if(appBar == null)
                     return;
 
-                //if(mRecyclerView.getChildAt(0).getTop() < initialTopPosition ) {
                 if (mRecyclerView.canScrollVertically(SCROLL_DIRECTION_UP)) {
                     appBar.setElevation(5);
                 } else {
@@ -101,14 +103,10 @@ public class NoteListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_add:
-                Context context = getBaseContext();
-                Intent intent = new Intent(context, NoteEditActivity.class);
-//                intent.putExtra(NoteDetailFragment.ARG_ITEM_ID, "1");
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+                Log.d("WOURA", "Add Clicked!!!");
+                createPost();
 
                 return true;
             default:
@@ -116,94 +114,69 @@ public class NoteListActivity extends AppCompatActivity {
         }
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
-    }
+    private void createPost() {
+        postTitleDialog.setContentView(R.layout.post_title_dialog);
+        title_name = postTitleDialog.findViewById(R.id.post_title);
+        submitTitleBtn = postTitleDialog.findViewById(R.id.submit_btn);
+        cancleTitleBtn = postTitleDialog.findViewById(R.id.cancel_btn);
 
-    public static class SimpleItemRecyclerViewAdapter
-            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
-
-        private final NoteListActivity mParentActivity;
-        private final List<DummyContent.DummyItem> mValues;
-        private final boolean mTwoPane;
-        private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        submitTitleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
-                if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-                    arguments.putString(NoteDetailFragment.ARG_ITEM_ID, item.id);
-                    NoteDetailFragment fragment = new NoteDetailFragment();
-                    fragment.setArguments(arguments);
-                    mParentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.note_detail_container, fragment)
-                            .commit();
-                } else {
-                    Context context = view.getContext();
-                    Intent intent = new Intent(context, NoteDetailActivity.class);
-                    intent.putExtra(NoteDetailFragment.ARG_ITEM_ID, item.id);
+            public void onClick(View v) {
+                String title = title_name.getText().toString();
 
-                    context.startActivity(intent);
+                if(title.length() < 3){
+                    Toast.makeText(NoteListActivity.this, "Title empty or too short.", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(NoteListActivity.this, "Title is:  " + title, Toast.LENGTH_SHORT).show();
+                    postTitleDialog.dismiss();
+
+                    savePostTitle(title);
                 }
             }
-        };
+        });
 
-        SimpleItemRecyclerViewAdapter(NoteListActivity parent,
-                                      List<DummyContent.DummyItem> items,
-                                      boolean twoPane) {
-            mValues = items;
-            mParentActivity = parent;
-            mTwoPane = twoPane;
-        }
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.note_list_content, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
-            String theme = mValues.get(position).theme;
-            String title = mValues.get(position).title;
-            Boolean has_title = title != null;
-
-            if(has_title)
-                holder.mIdView.setText(mValues.get(position).title);
-            else
-                holder.mIdView.setVisibility(View.GONE);
-
-//            holder.mIdView.setTextColor(theme.equals("pink") ? Color.WHITE : Color.BLACK);
-
-            holder.mContentView.setText(mValues.get(position).details);
-//            holder.mContentView.setTextColor(theme.equals("pink") ? Color.WHITE : Color.BLACK);
-
-            if(!has_title){
-                holder.mContentView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
-                holder.mContentView.setMaxLines(3);
+        cancleTitleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postTitleDialog.dismiss();
             }
+        });
 
-//            holder.itemView.setBackgroundResource(theme.equals("pink") ? R.color.colorPink : R.color.colorGreen);
+        postTitleDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        postTitleDialog.show();
+    }
 
-            holder.itemView.setTag(mValues.get(position));
-            holder.itemView.setOnClickListener(mOnClickListener);
-        }
+    private void savePostTitle(String title){
+        Post new_post = new Post(title, null, null, null);
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "production")
+                .allowMainThreadQueries()
+                .build();
 
-        @Override
-        public int getItemCount() {
-            return mValues.size();
-        }
+        long inserted_id = db.postDao().insert(new_post);
+        new_post.setId((int) inserted_id);
 
-        class ViewHolder extends RecyclerView.ViewHolder {
-            final TextView mIdView;
-            final TextView mContentView;
+        openPost(new_post);
+    }
 
-            ViewHolder(View view) {
-                super(view);
-                mIdView = view.findViewById(R.id.id_text);
-                mContentView = view.findViewById(R.id.content);
-            }
-        }
+    private void openPost(Post new_post){
+        Intent intent = new Intent(getBaseContext(), NoteEditActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("post", new_post);
+        intent.putExtras(bundle);
+
+        startActivity(intent);
+    }
+
+    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "production")
+                .allowMainThreadQueries()
+                .build();
+
+        List<Post> posts = db.postDao().getPosts();
+        if(posts.size() < 1)
+            no_posts.setVisibility(View.VISIBLE);
+
+        recyclerView.setAdapter(new PostAdapter(this, posts, mTwoPane));
     }
 }

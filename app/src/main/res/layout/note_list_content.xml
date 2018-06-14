@@ -21,7 +21,9 @@
             android:layout_marginBottom="4dp"
             android:textColor="#000"
             android:text="Notes 1"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:maxLines="1"
+            android:ellipsize="end"/>
 
         <TextView
             android:id="@+id/content"
@@ -29,7 +31,7 @@
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:ellipsize="marquee"
-            android:text="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eum at, accusantium sunt suscipit eius alias modi voluptatem neque dicta ipsum reiciendis numquam. Totam obcaecati non repudiandae iure nam dolorem officiis."
+            android:text="Click to edit note"
             android:textSize="16dp"
             android:textColor="#000"
             android:alpha="0.85"
