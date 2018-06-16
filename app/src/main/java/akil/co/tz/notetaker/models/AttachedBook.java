@@ -1,16 +1,16 @@
-package akil.co.tz.notetaker.Data;
+package akil.co.tz.notetaker.models;
 
 /**
  * Created by DevDept on 6/14/18.
  */
 
-public class Book {
+public class AttachedBook {
     private String title;
     private int chapter;
     private int startVerse;
     private int endVerse;
 
-    public Book(String title, int chapter, int startVerse, int endVerse) {
+    public AttachedBook(String title, int chapter, int startVerse, int endVerse) {
         this.title = title;
         this.chapter = chapter;
         this.startVerse = startVerse;

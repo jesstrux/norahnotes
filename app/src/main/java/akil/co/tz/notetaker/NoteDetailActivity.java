@@ -26,6 +26,7 @@ import akil.co.tz.notetaker.models.Post;
 
 public class NoteDetailActivity extends AppCompatActivity {
     Post mItem;
+    final int REQUEST_ATTACHMENTS = 32;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +121,9 @@ public class NoteDetailActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home :
                 navigateUpTo(new Intent(this, NoteListActivity.class));
+                return true;
+            case R.id.action_attach :
+                startActivityForResult(new Intent(this, PickVerseActivity.class), REQUEST_ATTACHMENTS);
                 return true;
             case R.id.action_edit:
                 Context context = getBaseContext();

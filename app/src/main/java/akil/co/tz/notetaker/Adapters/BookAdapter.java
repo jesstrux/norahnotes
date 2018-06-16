@@ -1,11 +1,8 @@
 package akil.co.tz.notetaker.Adapters;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +11,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import akil.co.tz.notetaker.Data.Book;
-import akil.co.tz.notetaker.NoteDetailActivity;
-import akil.co.tz.notetaker.NoteDetailFragment;
-import akil.co.tz.notetaker.NoteEditActivity;
-import akil.co.tz.notetaker.NoteListActivity;
+import akil.co.tz.notetaker.models.Book;
 import akil.co.tz.notetaker.R;
 import akil.co.tz.notetaker.VerseBottomSheet;
-import akil.co.tz.notetaker.models.Post;
 
 /**
  * Created by DevDept on 6/14/18.
@@ -38,7 +30,7 @@ public class BookAdapter
             Book item = (Book) view.getTag();
 //            final AppCompatActivity context = view.getContext();
 
-            VerseBottomSheet verseBottomSheet = new VerseBottomSheet();
+            VerseBottomSheet verseBottomSheet = VerseBottomSheet.newInstance(item);
             verseBottomSheet.show(mParentActivity.getSupportFragmentManager(), "versebottomsheet");
         }
     };

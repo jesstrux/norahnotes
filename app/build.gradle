@@ -32,8 +32,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    compile 'com.android.support:support-annotations:27.1.1'
-    androidTestCompile 'com.android.support:support-annotations:27.1.1'
+    implementation 'com.android.support:support-annotations:27.1.1'
+    androidTestImplementation 'com.android.support:support-annotations:27.1.1'
 
     def lifecycle_version = "1.1.1"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
@@ -41,4 +41,11 @@ dependencies {
     def room_version = "1.1.0" // or, for latest rc, use "1.1.1-rc1"
     implementation "android.arch.persistence.room:runtime:$room_version"
     annotationProcessor "android.arch.persistence.room:compiler:$room_version"
+
+    testImplementation 'com.squareup.okhttp3:mockwebserver:3.10.0'
+
+    implementation 'com.google.firebase:firebase-messaging:17.0.0'
 }
+
+apply plugin: 'com.google.gms.google-services'
+

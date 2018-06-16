@@ -34,6 +34,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import akil.co.tz.notetaker.Adapters.PostAdapter;
 import akil.co.tz.notetaker.Data.AppDatabase;
 import akil.co.tz.notetaker.dummy.DummyContent;
@@ -95,6 +98,15 @@ public class NoteListActivity extends AppCompatActivity {
                 }
             }
         });
+
+//        FirebaseApp.initializeApp(getBaseContext());
+//
+//        String token = FirebaseInstanceId.getInstance().getToken();
+//
+//        // Log and toast
+//        String msg = "TOKEN IS: " + token;
+//        Log.d("WOURA", msg);
+//        Toast.makeText(NoteListActivity.this, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

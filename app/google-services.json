@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "158992119121",
+    "firebase_url": "https://smart-memo-3.firebaseio.com",
+    "project_id": "smart-memo-3",
+    "storage_bucket": "smart-memo-3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:158992119121:android:43338997bdae5ac4",
+        "android_client_info": {
+          "package_name": "akil.co.tz.notetaker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "158992119121-27dun53t10bjp0pjguavcrmfdfdhvjnt.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "158992119121-27dun53t10bjp0pjguavcrmfdfdhvjnt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMdtRaxbpjtmlryLJXJsUHVAM493fT3AY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

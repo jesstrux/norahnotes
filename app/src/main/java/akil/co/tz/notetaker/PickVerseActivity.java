@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,9 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import akil.co.tz.notetaker.Adapters.BookAdapter;
-import akil.co.tz.notetaker.Adapters.PostAdapter;
-import akil.co.tz.notetaker.Data.Book;
-import akil.co.tz.notetaker.models.Post;
+import akil.co.tz.notetaker.models.Book;
 
 public class PickVerseActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
@@ -53,7 +50,18 @@ public class PickVerseActivity extends AppCompatActivity {
                 JSONObject obj = jsonArray.getJSONObject(i);
 
                 if(obj != null){
-                    Book book = new Book(obj.getString("title"), -1, -1, -1);
+                    JSONArray chapters = (JSONArray) obj.getJSONArray("chapters");
+                    String[] chapters_array = new String[chapters.length()];
+                    int[] verses_array = new int[chapters.length()];
+
+                    if (chapters_array != null) {
+                        for (int j=0;j< chapters.length();j++){
+                            chapters_array[j] = "" + (j + 1);
+                            verses_array[j] = chapters.optInt(j);
+                        }
+                    }
+
+                    Book book = new Book(obj.getString("title"), chapters_array, verses_array);
                     mBookList.add(book);
                 }
 
