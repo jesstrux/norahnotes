@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import akil.co.tz.notetaker.Adapters.PostAdapter;
 import akil.co.tz.notetaker.Data.AppDatabase;
@@ -107,6 +108,8 @@ public class NoteListActivity extends AppCompatActivity {
 //        String msg = "TOKEN IS: " + token;
 //        Log.d("WOURA", msg);
 //        Toast.makeText(NoteListActivity.this, msg, Toast.LENGTH_SHORT).show();
+
+        FirebaseMessaging.getInstance().subscribeToTopic("Admin");
     }
 
     @Override
