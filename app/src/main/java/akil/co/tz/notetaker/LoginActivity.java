@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
 
     OkHttpClient client = new OkHttpClient();
 
-    private String login_url= "http://192.168.8.109:9000/login_mob.php";
+    private String login_url= "http://192.168.8.109:9000/api/login.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

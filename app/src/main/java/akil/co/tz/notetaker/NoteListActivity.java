@@ -13,6 +13,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,97 +45,151 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import akil.co.tz.notetaker.Adapters.PostAdapter;
 import akil.co.tz.notetaker.Data.AppDatabase;
+import akil.co.tz.notetaker.Utils.NotificationUtil;
 import akil.co.tz.notetaker.dummy.DummyContent;
 import akil.co.tz.notetaker.models.Post;
+import akil.co.tz.notetaker.models.User;
 import akil.co.tz.notetaker.ui.dialogs.PostTitleDialog;
 
 import java.util.List;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 public class NoteListActivity extends AppCompatActivity {
     private boolean mTwoPane;
-    private RecyclerView mRecyclerView;
-    private static final int SCROLL_DIRECTION_UP = -1;
     private Dialog postTitleDialog;
     private EditText title_name;
     private Button submitTitleBtn;
     private ImageButton cancleTitleBtn;
-    private TextView no_posts;
+    Menu optionsMenu;
+    private  int mPostition;
+
+    SharedPreferences prefs;
+    Boolean offline = false;
+
+    private User mUser;
+
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
+
+    private OnFragmentInteractionListener mListener;
+
+    interface OnFragmentInteractionListener {
+        void onClearList();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_list);
 
+        prefs = getDefaultSharedPreferences(getApplicationContext());
+        offline = prefs.getBoolean("is_offline", false);
+
+        if(getIntent().getExtras() != null){
+            Bundle bundle = getIntent().getExtras();
+            mUser = (User) bundle.getSerializable("user");
+        }
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
-        final AppBarLayout appBar = findViewById(R.id.app_bar);
-        no_posts = findViewById(R.id.no_posts);
 
-        if (findViewById(R.id.note_detail_container) != null) {
-            mTwoPane = true;
-        }
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        postTitleDialog = new Dialog(this);
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        mRecyclerView = findViewById(R.id.note_list);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        assert mRecyclerView != null;
-        setupRecyclerView(mRecyclerView);
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
+            public void onPageScrolled(int i, float v, int i1) {
             }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if(appBar == null)
-                    return;
+            public void onPageSelected(int i) {
+                tabLayout.getTabAt(i).select();
 
-                if (mRecyclerView.canScrollVertically(SCROLL_DIRECTION_UP)) {
-                    appBar.setElevation(5);
-                } else {
-                    appBar.setElevation(0);
+                if(i == 0 && optionsMenu != null){
+                    optionsMenu.findItem(R.id.action_add)
+                            .setVisible(true);
+                    optionsMenu.findItem(R.id.action_clear_notifications)
+                            .setVisible(false);
+                    optionsMenu.findItem(R.id.action_notify)
+                            .setVisible(false);
+                }
+                else if(i == 1 && optionsMenu != null){
+                    optionsMenu.findItem(R.id.action_add)
+                            .setVisible(false);
+                    optionsMenu.findItem(R.id.action_clear_notifications)
+                            .setVisible(true);
+                    optionsMenu.findItem(R.id.action_notify)
+                            .setVisible(true);
                 }
             }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+            }
         });
+
+        postTitleDialog = new Dialog(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        optionsMenu = menu;
+
+        if(offline)
+            optionsMenu.findItem(R.id.action_notify)
+                .setIcon(R.drawable.ic_notify_off);
+
+
+        Log.d("WOURA", optionsMenu == null ? "No options memu on created" : "Ipo options menu on created!");
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_logout:
-                logout();
+            case R.id.action_profile:
+                viewProfile();
                 return true;
             case R.id.action_add:
                 createPost();
+                return true;
+            case R.id.action_clear_notifications:
+                clearNotificatoins();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void logout(){
-        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("saved_user", null);
-        editor.putString("subscribed_to_department", null);
-        editor.putString("subscribed_to_role", null);
-        editor.apply();
+    private void clearNotificatoins() {
+        NotificationUtil notificationUtil = new NotificationUtil();
+        notificationUtil.emptyNotifications(getApplicationContext());
 
-        startActivity(new Intent(this, LoginActivity.class));
-        finish();
+        if(mListener != null)
+            mListener.onClearList();
+
+        optionsMenu.findItem(R.id.action_clear_notifications)
+                .setVisible(false);
+    }
+
+    private void viewProfile() {
+        Intent intent = new Intent(getBaseContext(), ProfileActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user", mUser);
+
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     private void createPost() {
@@ -188,15 +246,79 @@ public class NoteListActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "production")
-                .allowMainThreadQueries()
-                .build();
+    public static class PlaceholderFragment extends android.support.v4.app.Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
 
-        List<Post> posts = db.postDao().getPosts();
-        if(posts.size() < 1)
-            no_posts.setVisibility(View.VISIBLE);
+        public PlaceholderFragment() {
+        }
 
-        recyclerView.setAdapter(new PostAdapter(this, posts, mTwoPane));
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static MainActivity.PlaceholderFragment newInstance(int sectionNumber) {
+            MainActivity.PlaceholderFragment fragment = new MainActivity.PlaceholderFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            return rootView;
+        }
+    }
+
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public android.support.v4.app.Fragment getItem(int position) {
+            Log.d("WOURA", optionsMenu == null ? "No options memu" : "Ipo options menu!");
+            mPostition = position;
+
+            if(position == 0){
+                if(optionsMenu != null){
+                    optionsMenu.findItem(R.id.action_add)
+                            .setVisible(true);
+                    optionsMenu.findItem(R.id.action_notify)
+                            .setVisible(false);
+                }
+                return MemoListFragment.newInstance(mUser.getId());
+            }
+            else if(position == 1){
+                if(optionsMenu != null){
+                    optionsMenu.findItem(R.id.action_add)
+                            .setVisible(false);
+                    optionsMenu.findItem(R.id.action_notify)
+                            .setVisible(true);
+                }
+
+                NotificationListFragment notificationListFragment = new NotificationListFragment();
+                mListener = (OnFragmentInteractionListener) notificationListFragment;
+
+                return notificationListFragment;
+            }
+
+            else
+                return MainActivity.PlaceholderFragment.newInstance(position + 1);
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
     }
 }

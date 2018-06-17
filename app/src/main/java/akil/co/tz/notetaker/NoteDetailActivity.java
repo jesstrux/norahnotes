@@ -12,6 +12,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -22,16 +23,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import akil.co.tz.notetaker.dummy.DummyContent;
+import akil.co.tz.notetaker.models.Memo;
 import akil.co.tz.notetaker.models.Post;
 
 public class NoteDetailActivity extends AppCompatActivity {
-    Post mItem;
+    Memo mItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
-        mItem = (Post) bundle.getSerializable("post");
+        mItem = (Memo) bundle.getSerializable("memo");
 
         setContentView(R.layout.activity_note_detail);
         final AppBarLayout appBar = findViewById(R.id.app_bar);
@@ -58,7 +60,7 @@ public class NoteDetailActivity extends AppCompatActivity {
 
 
         TextView content = findViewById(R.id.note_detail);
-        content.setText(mItem.getDetails());
+        content.setText(mItem.getBody());
 
         NestedScrollView note_detail_container = findViewById(R.id.note_detail_container);
         note_detail_container.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
@@ -79,18 +81,21 @@ public class NoteDetailActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.detail_menu, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.detail_menu, menu);
+//        return true;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home :
-                navigateUpTo(new Intent(this, NoteListActivity.class));
+//                navigateUpTo(new Intent(this, NoteListActivity.class));
+                this.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK));
+                this.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK));
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -14,12 +15,20 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import akil.co.tz.notetaker.Utils.NotificationUtil;
+import akil.co.tz.notetaker.models.Notification;
+
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "WOURA";
+    SharedPreferences prefs;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        prefs = getDefaultSharedPreferences(getApplicationContext());
+
         Log.d(TAG, "FirebaseMessage From: " + remoteMessage.getFrom());
 
         if (remoteMessage.getData().size() > 0) {
@@ -29,13 +38,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Title: " + title);
             Log.d(TAG, "Message: " + message);
 
-            sendNotification(title, message);
+            Boolean offline = prefs.getBoolean("is_offline", false);
+
+            if(!offline){
+                sendNotification(title, message);
+                Log.d(TAG, "Not offline, sending notification.");
+            }else{
+                Log.d(TAG, "Offline, saving only.");
+            }
+
+            NotificationUtil notificationUtil = new NotificationUtil();
+            notificationUtil.addNotification(getApplicationContext(), new Notification(title, message));
         }
     }
 
 
     private void sendNotification(String title, String messageBody) {
-        Intent intent = new Intent(this, NoteListActivity.class);
+        Intent intent = new Intent(this, SplashScreen.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);

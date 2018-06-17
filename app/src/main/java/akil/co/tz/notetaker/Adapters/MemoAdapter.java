@@ -3,7 +3,6 @@ package akil.co.tz.notetaker.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -14,43 +13,40 @@ import android.widget.TextView;
 import java.util.List;
 
 import akil.co.tz.notetaker.NoteDetailActivity;
-import akil.co.tz.notetaker.NoteDetailFragment;
 import akil.co.tz.notetaker.NoteEditActivity;
-import akil.co.tz.notetaker.NoteListActivity;
 import akil.co.tz.notetaker.R;
+import akil.co.tz.notetaker.models.Memo;
 import akil.co.tz.notetaker.models.Post;
 
 /**
  * Created by DevDept on 6/14/18.
  */
 
-public class PostAdapter
-        extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
+public class MemoAdapter
+        extends RecyclerView.Adapter<MemoAdapter.ViewHolder> {
 
-    private final List<Post> mValues;
-    private final boolean mTwoPane;
+    private final List<Memo> mValues;
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Post item = (Post) view.getTag();
+            Memo item = (Memo) view.getTag();
             Context context = view.getContext();
             Intent intent;
-            if(item.getDetails() != null)
+            if(item.getBody() != null)
                 intent = new Intent(context, NoteDetailActivity.class);
             else
                 intent = new Intent(context, NoteEditActivity.class);
 
             Bundle bundle = new Bundle();
-            bundle.putSerializable("post", item);
+            bundle.putSerializable("memo", item);
             intent.putExtras(bundle);
 
             context.startActivity(intent);
         }
     };
 
-    public PostAdapter(List<Post> items, boolean twoPane) {
+    public MemoAdapter(List<Memo> items) {
         mValues = items;
-        mTwoPane = twoPane;
     }
 
     @Override
@@ -62,26 +58,15 @@ public class PostAdapter
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        String theme = mValues.get(position).getTheme();
-        String title = mValues.get(position).getTitle();
+        Memo memo = mValues.get(position);
+        String title = memo.getTitle();
         Boolean has_title = title != null;
 
         if(has_title)
-            holder.mIdView.setText(mValues.get(position).getTitle());
-        else
-            holder.mIdView.setVisibility(View.GONE);
+            holder.mIdView.setText(title + "  >  " + memo.getRecepientName());
 
-//            holder.mIdView.setTextColor(theme.equals("pink") ? Color.WHITE : Color.BLACK);
-        if(mValues.get(position).getDetails() != null)
-            holder.mContentView.setText(mValues.get(position).getDetails());
-//            holder.mContentView.setTextColor(theme.equals("pink") ? Color.WHITE : Color.BLACK);
-
-        if(!has_title){
-            holder.mContentView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
-            holder.mContentView.setMaxLines(3);
-        }
-
-//            holder.itemView.setBackgroundResource(theme.equals("pink") ? R.color.colorPink : R.color.colorGreen);
+        if(memo.getBody() != null)
+            holder.mContentView.setText(memo.getBody());
 
         holder.itemView.setTag(mValues.get(position));
         holder.itemView.setOnClickListener(mOnClickListener);
