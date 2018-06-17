@@ -7,6 +7,7 @@ import android.app.FragmentTransaction;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -58,7 +59,6 @@ public class NoteListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        startActivity(new Intent(this, PickVerseActivity.class));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_list);
 
@@ -99,17 +99,6 @@ public class NoteListActivity extends AppCompatActivity {
                 }
             }
         });
-
-//        FirebaseApp.initializeApp(getBaseContext());
-//
-//        String token = FirebaseInstanceId.getInstance().getToken();
-//
-//        // Log and toast
-//        String msg = "TOKEN IS: " + token;
-//        Log.d("WOURA", msg);
-//        Toast.makeText(NoteListActivity.this, msg, Toast.LENGTH_SHORT).show();
-
-        FirebaseMessaging.getInstance().subscribeToTopic("Admin");
     }
 
     @Override
@@ -122,23 +111,27 @@ public class NoteListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_login:
-                Log.d("WOURA", "Add Clicked!!!");
-                login();
-
+            case R.id.action_logout:
+                logout();
                 return true;
             case R.id.action_add:
-                Log.d("WOURA", "Add Clicked!!!");
                 createPost();
-
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void login(){
+    private void logout(){
+        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("saved_user", null);
+        editor.putString("subscribed_to_department", null);
+        editor.putString("subscribed_to_role", null);
+        editor.apply();
+
         startActivity(new Intent(this, LoginActivity.class));
+        finish();
     }
 
     private void createPost() {

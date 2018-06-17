@@ -26,12 +26,10 @@ import akil.co.tz.notetaker.models.Post;
 
 public class NoteDetailActivity extends AppCompatActivity {
     Post mItem;
-    final int REQUEST_ATTACHMENTS = 32;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        mItem = DummyContent.ITEM_MAP.get(getIntent().getStringExtra(NoteDetailFragment.ARG_ITEM_ID));
         Bundle bundle = getIntent().getExtras();
         mItem = (Post) bundle.getSerializable("post");
 
@@ -49,7 +47,6 @@ public class NoteDetailActivity extends AppCompatActivity {
         if(post_title != null && post_title.length() > 0){
             title.setTextColor(Color.parseColor("#333333"));
             title.setText(post_title);
-//            toolbar.setTitle(post_title);
         }
 
         setSupportActionBar(toolbar);
@@ -69,44 +66,17 @@ public class NoteDetailActivity extends AppCompatActivity {
 
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-
-//                if (scrollY > oldScrollY) {
-//                    Log.i(TAG, "Scroll DOWN");
-//                }
-//                if (scrollY < oldScrollY) {
-//                    Log.i(TAG, "Scroll UP");
-//                }
-
-                Log.i(TAG, "SCROLL POS: " + scrollY);
-
                 if (scrollY <= 100) {
-                    Log.i(TAG, "BOTTOM SCROLL");
                     appBar.setElevation(0);
                     toolbar.setTitle("");
                     title_bar.setVisibility(View.VISIBLE);
                 }else{
-                    Log.i(TAG, "TOP SCROLL");
                     appBar.setElevation(5);
                     toolbar.setTitle(post_title);
                     title_bar.setVisibility(View.INVISIBLE);
                 }
-
-//                if (scrollY == ( v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight() )) {
-//
-//                }
             }
         });
-
-//        if (savedInstanceState == null) {
-//            Bundle arguments = new Bundle();
-//            arguments.putString(NoteDetailFragment.ARG_ITEM_ID,
-//                    getIntent().getStringExtra(NoteDetailFragment.ARG_ITEM_ID));
-//            NoteDetailFragment fragment = new NoteDetailFragment();
-//            fragment.setArguments(arguments);
-//            getSupportFragmentManager().beginTransaction()
-//                    .add(R.id.note_detail_container, fragment)
-//                    .commit();
-//        }
     }
 
     @Override
@@ -121,18 +91,6 @@ public class NoteDetailActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home :
                 navigateUpTo(new Intent(this, NoteListActivity.class));
-                return true;
-            case R.id.action_attach :
-                startActivityForResult(new Intent(this, PickVerseActivity.class), REQUEST_ATTACHMENTS);
-                return true;
-            case R.id.action_edit:
-                Context context = getBaseContext();
-                Intent intent = new Intent(context, NoteEditActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("post", mItem);
-                intent.putExtras(bundle);
-                context.startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
