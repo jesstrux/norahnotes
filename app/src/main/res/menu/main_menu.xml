@@ -6,6 +6,11 @@
         <!--android:title="LOGOUT"-->
         <!--app:showAsAction="always"/>-->
 
+    <item android:id="@+id/action_filter"
+        android:title="Filter"
+        android:icon="@drawable/ic_filter"
+        app:showAsAction="always"/>
+
     <item android:id="@+id/action_add"
         android:title="Add Note"
         android:icon="@drawable/ic_add"

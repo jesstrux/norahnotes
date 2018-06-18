@@ -110,4 +110,9 @@ public class NotificationListFragment extends Fragment implements NoteListActivi
         no_posts.setVisibility(View.VISIBLE);
         no_posts.setText("No notifications found!");
     }
+
+    @Override
+    public void onFilterList(CharSequence item) {
+
+    }
 }

@@ -13,12 +13,13 @@ import java.io.Serializable;
 @Entity
 public class Memo implements Serializable {
     @Ignore
-    public Memo(int id, String title, String body, String recepientName, int recepientId) {
+    public Memo(int id, String title, String body, String recepientName, int recepientId, String type) {
         this.id = id;
         this.title = title;
         this.body = body;
         this.recepientName = recepientName;
         this.recepientId = recepientId;
+        this.type = type;
     }
 
     @PrimaryKey(autoGenerate = true)
@@ -28,6 +29,7 @@ public class Memo implements Serializable {
     private String body;
     private String recepientName;
     private int recepientId;
+    private String type;
 
     public int getId() {
         return id;
@@ -67,6 +69,14 @@ public class Memo implements Serializable {
 
     public void setRecepientId(int recepientId) {
         this.recepientId = recepientId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override

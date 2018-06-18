@@ -55,7 +55,7 @@ import okhttp3.ResponseBody;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
-public class MemoListFragment extends Fragment {
+public class MemoListFragment extends Fragment implements NoteListActivity.OnFragmentInteractionListener {
     private static final int SCROLL_DIRECTION_UP = -1;
     public static final String ARG_ITEM_ID = "item_id";
     private Post mItem;
@@ -66,6 +66,7 @@ public class MemoListFragment extends Fragment {
     private TextView no_posts;
 
     ArrayList<Memo> memoList = new ArrayList<>();
+    ArrayList<Memo> originalList = new ArrayList<>();
     MemoAdapter memoAdapter;
 
     public MemoListFragment() {
@@ -139,6 +140,39 @@ public class MemoListFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onClearList() {
+
+    }
+
+    @Override
+    public void onFilterList(CharSequence item) {
+        Log.d("WOURA", "New Filter: " + item.toString());
+        ArrayList<Memo> memos = new ArrayList<>();
+
+        memoList.clear();
+        if(item.toString().equals("All")){
+            memoList.addAll(originalList);
+            memoAdapter.notifyDataSetChanged();
+        }else{
+            for( Memo a : originalList) {
+                if (a.getType().equals(item.toString())) {
+                    memoList.add(a);
+                }
+            }
+
+            memoAdapter.notifyDataSetChanged();
+        }
+
+        Toast.makeText(getContext(), "Memos filtered!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        NoteListActivity activity = (NoteListActivity) getActivity();
+        activity.setListener(this);
+    }
 
     public class MemoFetchTask extends AsyncTask<String, Void, ArrayList<Memo>> {
         private final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -173,6 +207,7 @@ public class MemoListFragment extends Fragment {
         protected void onPostExecute(final ArrayList<Memo> result) {
             if(result != null){
                 Log.d("WOURA", "Found " + result.size() + " memos");
+                originalList.addAll(result);
                 memoList.addAll(result);
                 memoAdapter.notifyDataSetChanged();
 

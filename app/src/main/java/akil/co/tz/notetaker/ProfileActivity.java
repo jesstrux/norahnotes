@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import akil.co.tz.notetaker.Utils.NotificationUtil;
 import akil.co.tz.notetaker.models.User;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
@@ -81,6 +82,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         editor.putString("subscribed_to_department", null);
         editor.putString("subscribed_to_role", null);
         editor.commit();
+
+        NotificationUtil notificationUtil = new NotificationUtil();
+        notificationUtil.emptyNotifications(getApplicationContext());
 
         startActivity(new Intent(this, LoginActivity.class));
         finish();

@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -17,6 +18,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -76,6 +78,7 @@ public class NoteListActivity extends AppCompatActivity {
 
     interface OnFragmentInteractionListener {
         void onClearList();
+        void onFilterList(CharSequence item);
     }
 
     @Override
@@ -115,6 +118,8 @@ public class NoteListActivity extends AppCompatActivity {
                 tabLayout.getTabAt(i).select();
 
                 if(i == 0 && optionsMenu != null){
+                    optionsMenu.findItem(R.id.action_filter)
+                            .setVisible(true);
                     optionsMenu.findItem(R.id.action_add)
                             .setVisible(true);
                     optionsMenu.findItem(R.id.action_clear_notifications)
@@ -123,6 +128,8 @@ public class NoteListActivity extends AppCompatActivity {
                             .setVisible(false);
                 }
                 else if(i == 1 && optionsMenu != null){
+                    optionsMenu.findItem(R.id.action_filter)
+                            .setVisible(false);
                     optionsMenu.findItem(R.id.action_add)
                             .setVisible(false);
                     optionsMenu.findItem(R.id.action_clear_notifications)
@@ -158,8 +165,8 @@ public class NoteListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_profile:
-                viewProfile();
+            case R.id.action_filter:
+                filterList();
                 return true;
             case R.id.action_add:
                 createPost();
@@ -167,9 +174,30 @@ public class NoteListActivity extends AppCompatActivity {
             case R.id.action_clear_notifications:
                 clearNotificatoins();
                 return true;
+            case R.id.action_profile:
+                viewProfile();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void filterList() {
+        final CharSequence[] items = {
+                "All", "Inbox", "Sent"
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Filter Notifications");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                Log.d("WOURA", mListener == null ? "True" : "False");
+                if(mListener != null)
+                    mListener.onFilterList(items[item]);
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void clearNotificatoins() {
@@ -193,36 +221,38 @@ public class NoteListActivity extends AppCompatActivity {
     }
 
     private void createPost() {
-        postTitleDialog.setContentView(R.layout.post_title_dialog);
-        title_name = postTitleDialog.findViewById(R.id.post_title);
-        submitTitleBtn = postTitleDialog.findViewById(R.id.submit_btn);
-        cancleTitleBtn = postTitleDialog.findViewById(R.id.cancel_btn);
+//        postTitleDialog.setContentView(R.layout.post_title_dialog);
+//        title_name = postTitleDialog.findViewById(R.id.post_title);
+//        submitTitleBtn = postTitleDialog.findViewById(R.id.submit_btn);
+//        cancleTitleBtn = postTitleDialog.findViewById(R.id.cancel_btn);
+//
+//        submitTitleBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String title = title_name.getText().toString();
+//
+//                if(title.length() < 3){
+//                    Toast.makeText(NoteListActivity.this, "Title empty or too short.", Toast.LENGTH_SHORT).show();
+//                }else{
+//                    Toast.makeText(NoteListActivity.this, "Title is:  " + title, Toast.LENGTH_SHORT).show();
+//                    postTitleDialog.dismiss();
+//
+//                    savePostTitle(title);
+//                }
+//            }
+//        });
+//
+//        cancleTitleBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                postTitleDialog.dismiss();
+//            }
+//        });
+//
+//        postTitleDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        postTitleDialog.show();
 
-        submitTitleBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String title = title_name.getText().toString();
-
-                if(title.length() < 3){
-                    Toast.makeText(NoteListActivity.this, "Title empty or too short.", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(NoteListActivity.this, "Title is:  " + title, Toast.LENGTH_SHORT).show();
-                    postTitleDialog.dismiss();
-
-                    savePostTitle(title);
-                }
-            }
-        });
-
-        cancleTitleBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                postTitleDialog.dismiss();
-            }
-        });
-
-        postTitleDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        postTitleDialog.show();
+        Toast.makeText(this, "Create Memo Feature Coming Soon", Toast.LENGTH_SHORT).show();
     }
 
     private void savePostTitle(String title){
@@ -278,6 +308,10 @@ public class NoteListActivity extends AppCompatActivity {
         }
     }
 
+    public void setListener(OnFragmentInteractionListener listener){
+        mListener = listener;
+    }
+
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -290,22 +324,11 @@ public class NoteListActivity extends AppCompatActivity {
             mPostition = position;
 
             if(position == 0){
-                if(optionsMenu != null){
-                    optionsMenu.findItem(R.id.action_add)
-                            .setVisible(true);
-                    optionsMenu.findItem(R.id.action_notify)
-                            .setVisible(false);
-                }
-                return MemoListFragment.newInstance(mUser.getId());
+                MemoListFragment memoListFragment = MemoListFragment.newInstance(mUser.getId());
+                mListener = (OnFragmentInteractionListener) memoListFragment;
+                return memoListFragment;
             }
             else if(position == 1){
-                if(optionsMenu != null){
-                    optionsMenu.findItem(R.id.action_add)
-                            .setVisible(false);
-                    optionsMenu.findItem(R.id.action_notify)
-                            .setVisible(true);
-                }
-
                 NotificationListFragment notificationListFragment = new NotificationListFragment();
                 mListener = (OnFragmentInteractionListener) notificationListFragment;
 
