@@ -64,7 +64,7 @@ import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 public class LoginActivity extends AppCompatActivity {
     private UserLoginTask mAuthTask = null;
 
-    private EditText mEmailView, mPasswordView;
+    private EditText mIpView, mEmailView, mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
 
@@ -76,6 +76,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        mIpView = findViewById(R.id.ip);
         mEmailView = findViewById(R.id.email);
 
         mPasswordView = findViewById(R.id.password);
@@ -111,13 +112,14 @@ public class LoginActivity extends AppCompatActivity {
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
+        String url = mIpView.getText().toString();
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
+        // Check for a valid password, if the mUser entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
@@ -139,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
             focusView.requestFocus();
         } else {
             showProgress(true);
-            mAuthTask = new UserLoginTask(login_url, email, password, FirebaseInstanceId.getInstance().getToken());
+            mAuthTask = new UserLoginTask(url, email, password, FirebaseInstanceId.getInstance().getToken());
             mAuthTask.execute((Void) null);
         }
     }
@@ -204,10 +206,13 @@ public class LoginActivity extends AppCompatActivity {
                 obj.put("password", mPassword);
                 obj.put("token", mDeviceToken);
 
+                SharedPreferences prefs = getDefaultSharedPreferences(getApplicationContext());
+                prefs.edit().putString("ip", mUrl).commit();
+
                 RequestBody body = RequestBody.create(JSON, obj.toString());
 
                 Request request = new Request.Builder()
-                        .url(mUrl)
+                        .url(mUrl + "/api/login.php")
                         .post(body)
                         .build();
 
@@ -218,7 +223,6 @@ public class LoginActivity extends AppCompatActivity {
                     String server_response = response_body.string();
                     Log.d("WOURA", "Response from server: " + server_response);
 
-                    SharedPreferences prefs = getDefaultSharedPreferences(getApplicationContext());
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putString("saved_user", server_response);
                     editor.apply();
@@ -226,11 +230,11 @@ public class LoginActivity extends AppCompatActivity {
                     ObjectMapper objectMapper = new ObjectMapper();
                     try {
                         User user = objectMapper.readValue(server_response, User.class);
-                        Log.d("WOURA", user.getName());
+//                        Log.d("WOURA", mUser.getName());
 
                         return user;
                     } catch (Exception e){
-                        Log.d("WOURA", "Error parsing user: " + e.getMessage());
+                        Log.d("WOURA", "Error parsing mUser: " + e.getMessage());
                     }
                 }
 
@@ -246,6 +250,15 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(final User result) {
             mAuthTask = null;
             if (result != null) {
+
+                if(result.isActivated() == null || !result.isActivated()){
+                    Intent intent = new Intent(getBaseContext(), SplashScreen.class);
+                    intent.putExtra("unconfirmed", true);
+                    startActivity(intent);
+
+                    return;
+                }
+
                 final SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
                 Boolean subscribed_to_department = prefs.getString("subscribed_to_department", null) != null;
                 final Boolean subscribed_to_role = prefs.getString("subscribed_to_role", null) != null;
@@ -311,7 +324,7 @@ public class LoginActivity extends AppCompatActivity {
         private void goIn(User user){
             Intent intent = new Intent(getBaseContext(), NoteListActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable("user", user);
+            bundle.putSerializable("mUser", user);
             intent.putExtras(bundle);
             startActivity(intent);
 

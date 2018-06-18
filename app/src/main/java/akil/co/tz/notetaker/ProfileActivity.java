@@ -3,8 +3,6 @@ package akil.co.tz.notetaker;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -12,9 +10,12 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import akil.co.tz.notetaker.Utils.NotificationUtil;
 import akil.co.tz.notetaker.models.User;
@@ -27,6 +28,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     Boolean offline;
     SharedPreferences prefs;
     TextView full_name, role, is_offline, email, phone, department, position;
+    User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,35 +49,51 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         Bundle intent_extras = getIntent().getExtras();
         if(intent_extras != null){
-            User user = (User) intent_extras.getSerializable("user");
+            mUser = (User) intent_extras.getSerializable("mUser");
 
-            if(user == null || user.getName() == null)
+            if(mUser == null || mUser.getName() == null)
                 return;
 
             full_name = findViewById(R.id.full_name);
-            full_name.setText(user.getName());
+            full_name.setText(mUser.getName());
 
             role = findViewById(R.id.role);
-            if (user.getRole() != null)
-                role.setText(user.getRole());
+            if (mUser.getRole() != null)
+                role.setText(mUser.getRole());
 
             email = findViewById(R.id.email);
-            email.setText(user.getEmail());
+            email.setText(mUser.getEmail());
 
             phone = findViewById(R.id.phone);
-            phone.setText(user.getPhone());
+            phone.setText(mUser.getPhone());
 
             department = findViewById(R.id.department);
-            department.setText(user.getDepartment());
+            department.setText(mUser.getDepartment());
 
             position = findViewById(R.id.position);
-            position.setText(user.getJob());
+            position.setText(mUser.getJob());
         }
 
         is_offline_wrapper.setOnClickListener(this);
+        is_offline_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                offline = is_offline_switch.isChecked();
+                prefs.edit().putBoolean("is_offline", offline).commit();
+                reflectOfflineState();
+            }
+        });
     }
 
     public void logout(View view){
+        if(mUser != null){
+            if(mUser.getDepartment() != null)
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(mUser.getDepartment().replaceAll("\\s+",""));
+
+            if(mUser.getRole() != null)
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(mUser.getRole().replaceAll("\\s+",""));
+        }
+
         SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("saved_user", null);

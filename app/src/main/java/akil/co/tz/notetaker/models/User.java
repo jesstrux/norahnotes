@@ -12,13 +12,14 @@ public class User implements Serializable {
     private String department;
     private String job;
     private String role;
+    private Boolean activated;
 
     public User() {
         super();
     }
 
 //    @JsonCreator
-    public User(String id, String name, String email, String phone, String department, String job, String role) {
+    public User(String id, String name, String email, String phone, String department, String job, String role, Boolean activated) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -26,6 +27,7 @@ public class User implements Serializable {
         this.department = department;
         this.job = job;
         this.role = role;
+        this.activated = activated;
     }
 
     public String getId() {
@@ -38,6 +40,10 @@ public class User implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public String getFirstName() {
+        return name.split(" ")[0];
     }
 
     public void setName(String name) {
@@ -82,5 +88,13 @@ public class User implements Serializable {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(Boolean activated) {
+        this.activated = activated;
     }
 }

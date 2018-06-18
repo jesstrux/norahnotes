@@ -93,7 +93,7 @@ public class MemoListFragment extends Fragment implements NoteListActivity.OnFra
                 .allowMainThreadQueries()
                 .build();
 
-        new MemoFetchTask().execute(memos_url + getArguments().getString(ARG_USER_ID));
+        new MemoFetchTask().execute(getArguments().getString(ARG_USER_ID));
 
         memoAdapter = new MemoAdapter(memoList);
         recyclerView.setAdapter(memoAdapter);
@@ -180,9 +180,14 @@ public class MemoListFragment extends Fragment implements NoteListActivity.OnFra
         @Override
         protected ArrayList<Memo> doInBackground(String... params) {
             OkHttpClient client = new OkHttpClient();
+            SharedPreferences prefs = getDefaultSharedPreferences(getActivity().getApplicationContext());
+            String url = prefs.getString("ip", null);
+            if(url == null)
+                return null;
+            url += "/api/my_memos.php?user_id=" + params[0];
 
             Request.Builder builder = new Request.Builder();
-            builder.url(params[0]);
+            builder.url(url);
             Request request = builder.build();
 
             try {
@@ -216,8 +221,11 @@ public class MemoListFragment extends Fragment implements NoteListActivity.OnFra
                     no_posts.setText("No memos found!");
                 }
             }
-            else
+            else{
                 Log.d("WOURA", "Found no memos");
+                no_posts.setVisibility(View.VISIBLE);
+                no_posts.setText("No memos found!");
+            }
         }
 
         @Override

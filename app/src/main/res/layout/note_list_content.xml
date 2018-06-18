@@ -3,7 +3,8 @@
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="6dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp"
     app:cardCornerRadius="2dp"
     app:cardElevation="1dp"
     app:cardBackgroundColor="#fff">
@@ -21,8 +22,7 @@
             android:layout_marginBottom="4dp"
             android:textColor="#333"
             android:text="Notes 1"
-            android:textSize="20dp"
-            android:textStyle="bold"
+            android:textSize="18dp"
             android:maxLines="1"
             android:paddingRight="30dp"
             android:ellipsize="end"/>
@@ -36,7 +36,7 @@
             android:text="Click to edit note"
             android:textSize="16dp"
             android:textColor="#000"
-            android:alpha="0.85"
+            android:alpha="0.75"
             android:fontFamily="@font/lustria"
             android:letterSpacing="0.06"
             android:paddingRight="20dp"/>

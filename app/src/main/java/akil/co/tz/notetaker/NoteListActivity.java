@@ -91,7 +91,7 @@ public class NoteListActivity extends AppCompatActivity {
 
         if(getIntent().getExtras() != null){
             Bundle bundle = getIntent().getExtras();
-            mUser = (User) bundle.getSerializable("user");
+            mUser = (User) bundle.getSerializable("mUser");
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -171,6 +171,13 @@ public class NoteListActivity extends AppCompatActivity {
             case R.id.action_add:
                 createPost();
                 return true;
+
+            case R.id.action_notify:
+                offline = !offline;
+                prefs.edit().putBoolean("is_offline", offline).commit();
+                optionsMenu.findItem(R.id.action_notify)
+                            .setIcon(offline ? R.drawable.ic_notify_off : R.drawable.ic_notify_on);
+                return true;
             case R.id.action_clear_notifications:
                 clearNotificatoins();
                 return true;
@@ -214,7 +221,7 @@ public class NoteListActivity extends AppCompatActivity {
     private void viewProfile() {
         Intent intent = new Intent(getBaseContext(), ProfileActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("user", mUser);
+        bundle.putSerializable("mUser", mUser);
 
         intent.putExtras(bundle);
         startActivity(intent);
