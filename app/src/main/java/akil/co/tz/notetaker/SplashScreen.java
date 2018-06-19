@@ -1,9 +1,13 @@
 package akil.co.tz.notetaker;
 
 import android.app.ListActivity;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +23,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import akil.co.tz.notetaker.Utils.NotificationUtil;
+import akil.co.tz.notetaker.models.Notification;
 import akil.co.tz.notetaker.models.User;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
@@ -33,6 +38,9 @@ public class SplashScreen extends AppCompatActivity {
 
         String strJson = prefs.getString("saved_user",null);
         Log.d("WOURA", "LOGGED USER: " + strJson);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                mMessageReceiver, new IntentFilter("userActivated"));
 
         if(getIntent().getStringExtra("unconfirmed") != null){
             setContentView(R.layout.not_confirmed);
@@ -53,13 +61,7 @@ public class SplashScreen extends AppCompatActivity {
                     User user = objectMapper.readValue(strJson, User.class);
 
                     if(user.isActivated() != null && user.isActivated()){
-                        Intent intent = new Intent(getBaseContext(), NoteListActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("mUser", user);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-
-                        finish();
+                        goIn(user);
 
                         return;
                     }
@@ -74,6 +76,25 @@ public class SplashScreen extends AppCompatActivity {
             }
         }
     }
+
+    private void goIn(User user) {
+        Intent intent = new Intent(getBaseContext(), NoteListActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("mUser", user);
+        intent.putExtras(bundle);
+        startActivity(intent);
+
+        finish();
+    }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            NotificationManager n = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            n.cancel("SMEMO", 0);
+            goIn((User) intent.getSerializableExtra("user"));
+        }
+    };
 
     public void logout(View view){
         SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);

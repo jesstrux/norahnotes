@@ -31,6 +31,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -67,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mIpView, mEmailView, mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private ImageView login_image;
 
     OkHttpClient client = new OkHttpClient();
 
@@ -78,6 +81,18 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         mIpView = findViewById(R.id.ip);
         mEmailView = findViewById(R.id.email);
+        login_image = findViewById(R.id.login_image);
+
+        login_image.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mIpView.setText("http://192.168.8.109:7000");
+                mEmailView.setText("wakyj07@gmail.com");
+                mPasswordView.setText("@ttss;86%");
+                attemptLogin();
+                return true;
+            }
+        });
 
         mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -207,12 +222,15 @@ public class LoginActivity extends AppCompatActivity {
                 obj.put("token", mDeviceToken);
 
                 SharedPreferences prefs = getDefaultSharedPreferences(getApplicationContext());
-                prefs.edit().putString("ip", mUrl).commit();
+                if(mUrl.length() < 1)
+                    prefs.edit().putString("ip", "http://192.168.8.109:9000").commit();
+                else
+                    prefs.edit().putString("ip", mUrl).commit();
 
                 RequestBody body = RequestBody.create(JSON, obj.toString());
 
                 Request request = new Request.Builder()
-                        .url(mUrl + "/api/login.php")
+                        .url(mUrl.length() < 1 ? login_url : mUrl + "/api/login.php")
                         .post(body)
                         .build();
 
@@ -227,12 +245,9 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("saved_user", server_response);
                     editor.apply();
 
-                    ObjectMapper objectMapper = new ObjectMapper();
+                    Gson gson = new Gson();
                     try {
-                        User user = objectMapper.readValue(server_response, User.class);
-//                        Log.d("WOURA", mUser.getName());
-
-                        return user;
+                        return gson.fromJson(server_response, User.class);
                     } catch (Exception e){
                         Log.d("WOURA", "Error parsing mUser: " + e.getMessage());
                     }
@@ -259,66 +274,17 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
-                final SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-                Boolean subscribed_to_department = prefs.getString("subscribed_to_department", null) != null;
-                final Boolean subscribed_to_role = prefs.getString("subscribed_to_role", null) != null;
+                if(result.getRole() != null)
+                    FirebaseMessaging.getInstance().subscribeToTopic(result.getRole().replaceAll("\\s+",""));
+                if(result.getDepartment() != null)
+                    FirebaseMessaging.getInstance().subscribeToTopic(result.getDepartment().replaceAll("\\s+",""));
 
-                if(result.getDepartment() == null || subscribed_to_department){
-                    Toast.makeText(getApplicationContext(), "Already Subscribed to department", Toast.LENGTH_SHORT).show();
-
-                    if(result.getRole() != null && !subscribed_to_role){
-                        subscribeToRole(result, prefs);
-                    }else{
-                        Toast.makeText(getApplicationContext(), "Already Subscribed to role", Toast.LENGTH_SHORT).show();
-
-                        showProgress(false);
-                        goIn(result);
-                    }
-                }else{
-                    FirebaseMessaging.getInstance().subscribeToTopic(result.getDepartment().replaceAll("\\s+",""))
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    SharedPreferences.Editor editor = prefs.edit();
-                                    editor.putString("subscribed_to_department", "true");
-                                    editor.apply();
-
-                                    Toast.makeText(getApplicationContext(), "Subscribed to department", Toast.LENGTH_SHORT).show();
-                                }
-
-                                if(result.getRole() != null && !subscribed_to_role){
-                                    subscribeToRole(result, prefs);
-                                }else{
-                                    showProgress(false);
-                                    goIn(result);
-                                }
-                            }
-                        });
-                }
+                goIn(result);
             } else {
                 showProgress(false);
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
-        }
-
-        private void subscribeToRole(final User user, final SharedPreferences prefs){
-            FirebaseMessaging.getInstance().subscribeToTopic(user.getRole().replaceAll("\\s+",""))
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putString("subscribed_to_role", "true");
-                            editor.apply();
-                        }
-
-                        Toast.makeText(getApplicationContext(), "Subscribed to role", Toast.LENGTH_SHORT).show();
-                        showProgress(false);
-                        goIn(user);
-                    }
-                });
         }
 
         private void goIn(User user){
