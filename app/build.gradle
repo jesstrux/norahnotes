@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "akil.co.tz.notetaker"
+        applicationId "akil.co.tz.mziki"
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
@@ -51,7 +51,17 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
 
     implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-auth:16.0.2'
+    implementation 'com.google.firebase:firebase-database:16.0.1'
+    implementation 'com.google.firebase:firebase-storage:16.0.1'
     implementation 'com.google.firebase:firebase-messaging:17.0.0'
+    implementation 'com.google.firebase:firebase-firestore:17.0.1'
+
+    implementation 'com.google.android.gms:play-services-auth:15.0.1'
+
+    implementation 'com.nabinbhandari.android:permissions:3.5'
+
+    implementation 'me.dm7.barcodescanner:zxing:1.9.8'
 }
 
 apply plugin: 'com.google.gms.google-services'

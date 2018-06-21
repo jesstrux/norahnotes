@@ -1,31 +1,39 @@
 {
   "project_info": {
-    "project_number": "158992119121",
-    "firebase_url": "https://smart-memo-3.firebaseio.com",
-    "project_id": "smart-memo-3",
-    "storage_bucket": "smart-memo-3.appspot.com"
+    "project_number": "675307021913",
+    "firebase_url": "https://mziki-i.firebaseio.com",
+    "project_id": "mziki-i",
+    "storage_bucket": "mziki-i.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:158992119121:android:43338997bdae5ac4",
+        "mobilesdk_app_id": "1:675307021913:android:97cad0ad203bb83a",
         "android_client_info": {
-          "package_name": "akil.co.tz.notetaker"
+          "package_name": "akil.co.tz.mziki"
         }
       },
       "oauth_client": [
         {
-          "client_id": "158992119121-27dun53t10bjp0pjguavcrmfdfdhvjnt.apps.googleusercontent.com",
+          "client_id": "675307021913-s49nj6bglc6u6pmd1ts6egdojj5fc0sd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "akil.co.tz.mziki",
+            "certificate_hash": "617a715780664ab1016282dffcec858c8e30de1b"
+          }
+        },
+        {
+          "client_id": "675307021913-9hhbppgebt274o6ir9v9ev4a0ep5hksg.apps.googleusercontent.com",
           "client_type": 3
         },
         {
-          "client_id": "158992119121-27dun53t10bjp0pjguavcrmfdfdhvjnt.apps.googleusercontent.com",
+          "client_id": "675307021913-9hhbppgebt274o6ir9v9ev4a0ep5hksg.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDMdtRaxbpjtmlryLJXJsUHVAM493fT3AY"
+          "current_key": "AIzaSyAHoDmRpXXeoWZDc0sieufd3D90ld94aY4"
         }
       ],
       "services": {
@@ -33,8 +41,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "675307021913-9hhbppgebt274o6ir9v9ev4a0ep5hksg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

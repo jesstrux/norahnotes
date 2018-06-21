@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="akil.co.tz.notetaker.NoteEditActivity"
+    tools:context="akil.co.tz.mzikii.NoteEditActivity"
     tools:ignore="MergeRootFrame"
     android:orientation="vertical">
 
@@ -75,7 +75,7 @@
                 android:layout_marginRight="24dp"
                 android:visibility="gone"/>
 
-            <akil.co.tz.notetaker.TintableImageView
+            <akil.co.tz.mzikii.TintableImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_underlined"

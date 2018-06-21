@@ -8,4 +8,4 @@
     android:textIsSelectable="true"
     android:fontFamily="lustria"
     android:letterSpacing="0.06"
-    tools:context="akil.co.tz.notetaker.NoteDetailFragment" />
+    tools:context="akil.co.tz.mzikii.NoteDetailFragment" />

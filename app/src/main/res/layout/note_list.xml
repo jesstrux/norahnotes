@@ -28,6 +28,6 @@
         android:paddingLeft="7dp"
         android:paddingRight="7dp"
         android:clipToPadding="false"
-        tools:context="akil.co.tz.notetaker.NoteListActivity"
+        tools:context="akil.co.tz.mzikii.NoteListActivity"
         tools:listitem="@layout/note_list_content"/>
 </FrameLayout>

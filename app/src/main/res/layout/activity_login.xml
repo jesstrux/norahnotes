@@ -1,116 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="akil.co.tz.notetaker.LoginActivity"
-    android:background="#eee">
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="#fff"
+    tools:context=".LoginActivity">
 
-    <ProgressBar
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/ic_headset"
+        android:tint="@color/colorPrimary"/>
+
+    <TextView
+        android:id="@+id/hello_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Hello there,"
         android:layout_marginBottom="8dp"
-        android:visibility="gone" />
+        android:textSize="30dp"
+        android:textColor="#333"/>
 
-    <ScrollView
-        android:id="@+id/login_form"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <TextView
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/not_verified_message"
+        android:textSize="18dp"
+        android:textColor="#555"
+        android:layout_marginBottom="20dp"/>
 
-        <LinearLayout
-            android:id="@+id/email_login_form"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
-
-            <ImageView
-                android:id="@+id/login_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="6dp"
-                android:layout_marginTop="40dp"
-                android:src="@drawable/smart_memo_logo"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Smart Memo"
-                android:fontFamily="@font/brandon_regular"
-                android:textSize="35dp"
-                android:gravity="center_horizontal"
-                android:layout_marginBottom="30dp"/>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="18dp">
-
-                <EditText
-                    android:id="@+id/ip"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Ip Address"
-                    android:imeActionId="6"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="18dp">
-
-                <EditText
-                    android:id="@+id/email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_email"
-                    android:inputType="textEmailAddress"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="18dp">
-
-                <EditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_password"
-                    android:imeActionId="6"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <Button
-                android:id="@+id/email_sign_in_button"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/action_sign_in_short"
-                android:textStyle="bold"
-                android:textColor="#fff"
-                android:background="@drawable/rounded_bg"/>
-
-        </LinearLayout>
-    </ScrollView>
+    <Button
+        android:id="@+id/sign_in_button"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginBottom="22dp"
+        android:background="@drawable/rounded_border"
+        android:textColor="#fff"
+        android:text="LOGIN TO MZIKI"
+        android:elevation="0dp"/>
 </LinearLayout>

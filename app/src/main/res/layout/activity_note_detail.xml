@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="akil.co.tz.notetaker.NoteDetailActivity"
+    tools:context="akil.co.tz.mzikii.NoteDetailActivity"
     tools:ignore="MergeRootFrame"
     android:background="#fff">
 

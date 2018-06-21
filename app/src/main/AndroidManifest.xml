@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="akil.co.tz.notetaker">
+    package="akil.co.tz.mzikii">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -21,6 +27,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ScanActivity"
+            android:label="Scan Qr to Login"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
@@ -35,7 +45,7 @@
             android:theme="@style/AppTheme.NoActionBar.Detail">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="akil.co.tz.notetaker.NoteListActivity" />
+                android:value="akil.co.tz.mzikii.NoteListActivity" />
         </activity>
         <activity
             android:name=".NoteEditActivity"
@@ -43,15 +53,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="akil.co.tz.notetaker.NoteListActivity" />
-        </activity>
-        <activity
-            android:name=".ProfileActivity"
-            android:label="Profile"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="akil.co.tz.notetaker.NoteListActivity" />
+                android:value="akil.co.tz.mzikii.NoteListActivity" />
         </activity>
 
         <service android:name=".MyFirebaseMessagingService">
@@ -65,10 +67,18 @@
             </intent-filter>
         </service>
 
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".ReceiveIntentActivity" android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="audio/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
