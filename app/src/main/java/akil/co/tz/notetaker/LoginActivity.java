@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
 
     OkHttpClient client = new OkHttpClient();
 
-    private String login_url= "http://192.168.8.109:9000/api/login.php";
+    private String login_url= "http://192.168.8.102:9000/api/login.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
         login_image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                mIpView.setText("http://192.168.8.109:7000");
+                mIpView.setText("http://192.168.8.102:7000");
                 mEmailView.setText("wakyj07@gmail.com");
                 mPasswordView.setText("@ttss;86%");
                 attemptLogin();
