@@ -27,6 +27,12 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import akil.co.tz.mzikii.models.User;
 
@@ -88,7 +94,22 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            FirebaseUser result_user = task.getResult().getUser();
+                            String uuid = result_user.getUid();
+                            SharedPreferences prefs = getDefaultSharedPreferences(getApplicationContext());
+                            prefs.edit().putString("user_id", uuid).commit();
                             Log.d("WOURA", "signInWithCredential:success");
+
+                            DocumentReference userRef = FirebaseFirestore.getInstance().document("users/"+uuid);
+                            Map<String, Object> user = new HashMap<>();
+                            user.put("id", result_user.getUid());
+                            user.put("email", result_user.getEmail());
+                            user.put("name", result_user.getDisplayName());
+
+                            if(result_user.getPhotoUrl() != null)
+                                user.put("image", result_user.getPhotoUrl().toString());
+
+                            userRef.set(user);
 
                             linkAccount(mAuth.getCurrentUser());
                         } else {

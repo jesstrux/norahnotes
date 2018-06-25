@@ -2,6 +2,7 @@ package akil.co.tz.mzikii;
 
 import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,16 +11,40 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import akil.co.tz.mzikii.Data.AppDatabase;
 import akil.co.tz.mzikii.models.Post;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 public class NoteEditActivity extends AppCompatActivity {
-    Post mPost;
+    String mTitle, mId, mDescription;
     private LinearLayout title_bar;
     private EditText title, content;
     int note_id = -1;
     Button saveBtn;
     AppDatabase db;
+
+    CollectionReference mSongsRef;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        SharedPreferences prefs = getDefaultSharedPreferences(getApplicationContext());
+        String user_id = prefs.getString("user_id", null);
+        mSongsRef = FirebaseFirestore.getInstance().collection("songs/"+user_id+"/list");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,29 +61,19 @@ public class NoteEditActivity extends AppCompatActivity {
             }
         });
 
-        db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "muziki")
-                .allowMainThreadQueries()
-                .build();
-
         if(getIntent().getExtras() != null){
             Bundle bundle = getIntent().getExtras();
-            mPost = (Post) bundle.getSerializable("post");
+            mTitle = bundle.getString("title");
+            mId = bundle.getString("id");
+            mDescription = bundle.getString("description");
 
-            if(mPost != null){
-                note_id = mPost.getId();
-
-                String post_title = mPost.getTitle();
-
-                if(post_title != null && post_title.length() > 0){
-                    title_bar.setVisibility(View.VISIBLE);
-                    title.setText(post_title);
-                }
-
-                String details = mPost.getDetails();
-
-                if(details != null)
-                    content.setText(details);
+            if(mTitle != null && mTitle.length() > 0){
+                title_bar.setVisibility(View.VISIBLE);
+                title.setText(mTitle);
             }
+
+            if(mDescription != null)
+                content.setText(mDescription);
         }
     }
 
@@ -66,11 +81,26 @@ public class NoteEditActivity extends AppCompatActivity {
         String title_value = title.getText().toString();
         String content_value = content.getText().toString();
 
-        if(note_id != -1 || (title_value.length() < 1 && content_value.length() < 1)){
-            mPost.setTitle(title_value);
-            mPost.setDetails(content_value);
-            db.postDao().updatePost(mPost);
-            Toast.makeText(NoteEditActivity.this, "Note saved.", Toast.LENGTH_SHORT).show();
+        if(title_value.length() > 0 && content_value.length() > 0){
+            final Map<String, Object> song = new HashMap<>();
+            song.put("title", title_value);
+            song.put("description", content_value);
+
+            if(mId == null)
+                mSongsRef.add(song).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        mId = documentReference.getId();
+                        song.put("id", mId);
+                        documentReference.set(song);
+                    }
+                });
+            else{
+                song.put("id", mId);
+                mSongsRef.document(mId).set(song);
+            }
+
+            Toast.makeText(NoteEditActivity.this, "Song.", Toast.LENGTH_SHORT).show();
         }else{
             Toast.makeText(NoteEditActivity.this, "All fields can't be empty.", Toast.LENGTH_SHORT).show();
         }
