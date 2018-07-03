@@ -65,7 +65,7 @@ public class NotificationListFragment extends Fragment implements NoteListActivi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.note_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_notifications, container, false);
 
         Activity activity = this.getActivity();
         no_posts = rootView.findViewById(R.id.no_posts);

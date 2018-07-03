@@ -78,7 +78,7 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     private void goIn(User user) {
-        Intent intent = new Intent(getBaseContext(), NoteListActivity.class);
+        Intent intent = new Intent(getBaseContext(), BaseActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("mUser", user);
         intent.putExtras(bundle);

@@ -73,7 +73,9 @@ public class LoginActivity extends AppCompatActivity {
 
     OkHttpClient client = new OkHttpClient();
 
-    private String login_url= "http://192.168.8.102:9000/api/login.php";
+    private String login_url= "http://192.168.8.104:9000/api/login.php";
+    private String admin_user = "wakyj07@gmail.com";
+    private String staff_user = "anabee@gmail.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,16 +85,18 @@ public class LoginActivity extends AppCompatActivity {
         mEmailView = findViewById(R.id.email);
         login_image = findViewById(R.id.login_image);
 
-        login_image.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                mIpView.setText("http://192.168.8.102:7000");
-                mEmailView.setText("wakyj07@gmail.com");
-                mPasswordView.setText("@ttss;86%");
-                attemptLogin();
-                return true;
-            }
-        });
+        if(login_image != null){
+            login_image.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mIpView.setText("http://192.168.8.104:9000");
+                    mEmailView.setText(admin_user);
+                    mPasswordView.setText("@ttss;86%");
+                    attemptLogin();
+                    return true;
+                }
+            });
+        }
 
         mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -288,7 +292,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         private void goIn(User user){
-            Intent intent = new Intent(getBaseContext(), NoteListActivity.class);
+            Intent intent = new Intent(getBaseContext(), BaseActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable("mUser", user);
             intent.putExtras(bundle);

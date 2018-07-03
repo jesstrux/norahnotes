@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f3f3f3"
+    tools:ignore="MergeRootFrame"
+    tools:context=".NotificationListFragment">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/NoteTakerTheme.AppBarOverlay"
+        android:background="#fff"
+        android:stateListAnimator="@null" >
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            app:title="All Alerts"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/NoteTakerTheme.PopupOverlay"
+            android:background="#fff"
+            app:layout_scrollFlags="snap"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <FrameLayout android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <TextView
+            android:id="@+id/no_posts"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:background="#fff"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:paddingBottom="80dp"
+            android:text="You don't have any notes, click the  +  icon to add some."/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/note_list"
+            android:name="akil.co.tz.notetaker.NoteListFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="2dp"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:clipToPadding="false"
+            tools:context="akil.co.tz.notetaker.NoteListActivity"
+            tools:listitem="@layout/note_list_content"/>
+    </FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -95,8 +95,11 @@ public class NoteListActivity extends AppCompatActivity {
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle(getTitle());
+
+        if(toolbar != null){
+            setSupportActionBar(toolbar);
+            toolbar.setTitle(getTitle());
+        }
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
