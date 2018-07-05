@@ -4,10 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -15,8 +15,8 @@ import java.util.List;
 import akil.co.tz.notetaker.NoteDetailActivity;
 import akil.co.tz.notetaker.NoteEditActivity;
 import akil.co.tz.notetaker.R;
+import akil.co.tz.notetaker.Utils.StringUtil;
 import akil.co.tz.notetaker.models.Memo;
-import akil.co.tz.notetaker.models.Post;
 
 /**
  * Created by DevDept on 6/14/18.
@@ -52,7 +52,7 @@ public class MemoAdapter
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.note_list_content, parent, false);
+                .inflate(R.layout.memo_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -62,11 +62,18 @@ public class MemoAdapter
         String title = memo.getTitle();
         Boolean has_title = title != null;
 
-        if(has_title)
-            holder.mIdView.setText(title + "  >  " + memo.getRecepientName());
+        if(memo.getType().equals("Inbox"))
+            holder.mIdView.setText(memo.getSenderName() + "  >  " + memo.getTitle());
+        else
+            holder.mIdView.setText(StringUtil.ellipsize(title, 18) + "  >  " + memo.getRecepientName());
 
         if(memo.getBody() != null)
             holder.mContentView.setText(memo.getBody());
+
+        if(memo.getAttachments() != null && memo.getAttachments().size() > 0){
+            holder.mAttachmentsWrapperView.setVisibility(View.VISIBLE);
+            holder.mAttachmentiew.setText("" + memo.getAttachments().size() + " attachments.");
+        }
 
         holder.itemView.setTag(mValues.get(position));
         holder.itemView.setOnClickListener(mOnClickListener);
@@ -80,11 +87,15 @@ public class MemoAdapter
     class ViewHolder extends RecyclerView.ViewHolder {
         final TextView mIdView;
         final TextView mContentView;
+        final HorizontalScrollView mAttachmentsWrapperView;
+        final TextView mAttachmentiew;
 
         ViewHolder(View view) {
             super(view);
             mIdView = view.findViewById(R.id.id_text);
             mContentView = view.findViewById(R.id.content);
+            mAttachmentsWrapperView = view.findViewById(R.id.attachment_holder);
+            mAttachmentiew = view.findViewById(R.id.attachment_count);
         }
     }
 }

@@ -5,6 +5,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by DevDept on 6/6/18.
@@ -12,24 +13,30 @@ import java.io.Serializable;
 
 @Entity
 public class Memo implements Serializable {
-    @Ignore
-    public Memo(int id, String title, String body, String recepientName, int recepientId, String type) {
+    private int id;
+    private String title;
+    private String body;
+    private String recepientName;
+    private int recepientId;
+    private String senderName;
+    private int senderId;
+    private String type;
+    private ArrayList<Attachment> attachments;
+
+    public Memo(int id, String title, String body, String senderName, int senderId, String recepientName, int recepientId, String type, ArrayList<Attachment> attachments) {
         this.id = id;
         this.title = title;
         this.body = body;
         this.recepientName = recepientName;
         this.recepientId = recepientId;
+
+        this.senderName = senderName;
+        this.senderId = senderId;
         this.type = type;
+
+        this.attachments.clear();
+        this.attachments.addAll(attachments);
     }
-
-    @PrimaryKey(autoGenerate = true)
-    private int id;
-
-    private String title;
-    private String body;
-    private String recepientName;
-    private int recepientId;
-    private String type;
 
     public int getId() {
         return id;
@@ -77,6 +84,30 @@ public class Memo implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
+
+    public int getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(int senderId) {
+        this.senderId = senderId;
+    }
+
+    public ArrayList<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(ArrayList<Attachment> attachments) {
+        this.attachments = attachments;
     }
 
     @Override
