@@ -19,8 +19,10 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import akil.co.tz.notetaker.dummy.DummyContent;
 import akil.co.tz.notetaker.models.Memo;
@@ -58,7 +60,13 @@ public class NoteDetailActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-
+        FloatingActionButton replyBtn = findViewById(R.id.reply_btn);
+        replyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(), "Replying to message...", Toast.LENGTH_LONG).show();
+            }
+        });
         TextView content = findViewById(R.id.note_detail);
         content.setText(mItem.getBody());
 
@@ -74,7 +82,7 @@ public class NoteDetailActivity extends AppCompatActivity {
 //                    title_bar.setVisibility(View.VISIBLE);
                 }else{
                     appBar.setElevation(2);
-//                    toolbar.setTitle(post_title);
+                    toolbar.setTitle(post_title);
 //                    title_bar.setVisibility(View.INVISIBLE);
                 }
             }

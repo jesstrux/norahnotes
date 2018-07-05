@@ -91,6 +91,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             full_name = rootView.findViewById(R.id.full_name);
             full_name.setText(mUser.getName());
 
+            toolbar.setTitle(mUser.getName());
+
             role = rootView.findViewById(R.id.role);
             if (mUser.getRole() != null)
                 role.setText(mUser.getRole());

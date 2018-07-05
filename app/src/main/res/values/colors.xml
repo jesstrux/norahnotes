@@ -3,7 +3,8 @@
     <color name="colorPrimary">#003a75</color>
     <color name="colorPrimaryLight">#1e4771</color>
     <color name="colorPrimaryDark">#013060</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#ffa500</color>
+    <!--<color name="colorAccent">#FF4081</color>-->
     <color name="colorPink">#FF4081</color>
     <color name="colorGreen">#7cef65</color>
     <color name="colorOrange">#ffa500</color>
