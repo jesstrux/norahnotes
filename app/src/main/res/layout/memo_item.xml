@@ -24,7 +24,6 @@
             android:text="Notes 1"
             android:textSize="18dp"
             android:maxLines="1"
-            android:paddingRight="30dp"
             android:ellipsize="end"/>
 
         <TextView
@@ -38,8 +37,7 @@
             android:textColor="#000"
             android:alpha="0.75"
             android:fontFamily="@font/lustria"
-            android:letterSpacing="0.06"
-            android:paddingRight="20dp"/>
+            android:letterSpacing="0.06"/>
 
         <HorizontalScrollView
             android:id="@+id/attachment_holder"

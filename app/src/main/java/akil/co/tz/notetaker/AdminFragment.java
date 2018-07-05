@@ -171,6 +171,9 @@ public class AdminFragment extends Fragment {
             String type = types[getArguments().getInt(ARG_SECTION_NUMBER)];
             new AdminDataFetchTask().execute(type);
 
+            String[] messages = {"Departments", "Jobs", "Staff Members"};
+            no_posts.setText("No " + messages[getArguments().getInt(ARG_SECTION_NUMBER)] + " found!");
+
             adminItemAdapter = new AdminItemAdapter(adminItems);
             recyclerView.setAdapter(adminItemAdapter);
         }
@@ -240,13 +243,11 @@ public class AdminFragment extends Fragment {
 
                     if(result.size() < 1){
                         no_posts.setVisibility(View.VISIBLE);
-                        no_posts.setText("No memos found!");
                     }
                 }
                 else{
                     Log.d("WOURA", "Found no memos");
                     no_posts.setVisibility(View.VISIBLE);
-                    no_posts.setText("No memos found!");
                 }
             }
 

@@ -151,6 +151,9 @@ public class MemosFragment extends Fragment {
             String type = types[getArguments().getInt(ARG_SECTION_NUMBER)];
             new MemoFetchTask().execute(type);
 
+            String[] messages = {"Memo Drafts", "Inbox Memos", "Sent Memos"};
+            no_posts.setText("No " + messages[getArguments().getInt(ARG_SECTION_NUMBER)] + " found!");
+
             memoAdapter = new MemoAdapter(memoList);
             recyclerView.setAdapter(memoAdapter);
         }
@@ -220,13 +223,11 @@ public class MemosFragment extends Fragment {
 
                     if(result.size() < 1){
                         no_posts.setVisibility(View.VISIBLE);
-                        no_posts.setText("No memos found!");
                     }
                 }
                 else{
                     Log.d("WOURA", "Found no memos");
                     no_posts.setVisibility(View.VISIBLE);
-                    no_posts.setText("No memos found!");
                 }
             }
 
