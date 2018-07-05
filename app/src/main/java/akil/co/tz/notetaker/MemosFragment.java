@@ -214,6 +214,7 @@ public class MemosFragment extends Fragment {
             protected void onPostExecute(final ArrayList<Memo> result) {
                 if(result != null){
                     Log.d("WOURA", "Found " + result.size() + " memos");
+                    memoList.clear();
                     memoList.addAll(result);
                     memoAdapter.notifyDataSetChanged();
 

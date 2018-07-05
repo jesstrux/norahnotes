@@ -234,6 +234,7 @@ public class AdminFragment extends Fragment {
             protected void onPostExecute(final ArrayList<AdminItem> result) {
                 if(result != null){
                     Log.d("WOURA", "Found " + result.size() + " memos");
+                    adminItems.clear();
                     adminItems.addAll(result);
                     adminItemAdapter.notifyDataSetChanged();
 
