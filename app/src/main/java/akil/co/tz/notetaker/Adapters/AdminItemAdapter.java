@@ -45,8 +45,10 @@ public class AdminItemAdapter
 
         if(adminItem.getType().equals("Job"))
             icon = R.drawable.ic_work;
-        else if (adminItem.getType().equals("Staff"))
+        else if (adminItem.getType().equals("Staff")){
             icon = R.drawable.ic_person;
+            holder.mIconView.setPadding(17,17,17,17);
+        }
 
         holder.mIconView.setImageResource(icon);
         holder.itemView.setTag(mValues.get(position));

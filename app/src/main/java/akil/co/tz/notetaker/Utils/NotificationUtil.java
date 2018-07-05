@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import akil.co.tz.notetaker.models.Notification;
@@ -39,7 +40,7 @@ public class NotificationUtil {
     public void addNotification(Context context, Notification notification) {
         List<Notification> favorites = getNotificaion(context);
         if (favorites == null)
-            favorites = new ArrayList<Notification>();
+            favorites = new ArrayList<>();
         favorites.add(notification);
         saveNotification(context, favorites);
     }
@@ -74,7 +75,9 @@ public class NotificationUtil {
                     Notification[].class);
 
             favorites = Arrays.asList(favoriteItems);
-            favorites = new ArrayList<Notification>(favorites);
+            favorites = new ArrayList<>(favorites);
+
+            Collections.reverse(favorites);
         } else
             return null;
 

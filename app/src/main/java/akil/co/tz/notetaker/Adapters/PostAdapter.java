@@ -71,10 +71,10 @@ public class PostAdapter
         else
             holder.mIdView.setVisibility(View.GONE);
 
-//            holder.mIdView.setTextColor(theme.equals("pink") ? Color.WHITE : Color.BLACK);
+//            holder.mTitleView.setTextColor(theme.equals("pink") ? Color.WHITE : Color.BLACK);
         if(mValues.get(position).getDetails() != null)
             holder.mContentView.setText(mValues.get(position).getDetails());
-//            holder.mContentView.setTextColor(theme.equals("pink") ? Color.WHITE : Color.BLACK);
+//            holder.mMessageView.setTextColor(theme.equals("pink") ? Color.WHITE : Color.BLACK);
 
         if(!has_title){
             holder.mContentView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);

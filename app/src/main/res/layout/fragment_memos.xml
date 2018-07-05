@@ -62,7 +62,8 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabIndicatorColor="#333333">
+            app:tabIndicatorColor="#333333"
+            android:background="@drawable/border_bottom">
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tabItem"

@@ -15,11 +15,15 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.ChangeBounds;
+import android.transition.TransitionManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +59,9 @@ public class AdminFragment extends Fragment {
     private ViewPager mViewPager;
     private  int mPostition;
     private Button addBtn;
+    private TextView pageTitle;
+    private View fakeNavBarSpacer;
+    private LinearLayout fakeNavBar;
 
     AppBarLayout appBar;
 
@@ -82,6 +89,9 @@ public class AdminFragment extends Fragment {
         final TabLayout tabLayout = rootView.findViewById(R.id.tabs);
 
         addBtn = rootView.findViewById(R.id.addBtn);
+        fakeNavBar = rootView.findViewById(R.id.fake_navbar);
+        pageTitle = rootView.findViewById(R.id.pageTitle);
+        fakeNavBarSpacer = rootView.findViewById(R.id.fake_navbar_spacer);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
@@ -93,8 +103,20 @@ public class AdminFragment extends Fragment {
             @Override
             public void onPageSelected(int i) {
                 tabLayout.getTabAt(i).select();
-                String[] btn_titles = {"Create Dept.", "Create Job", "Create Staff"};
-                addBtn.setText(btn_titles[i]);
+
+                final ChangeBounds transition = new ChangeBounds();
+                transition.setDuration(200L);
+                TransitionManager.beginDelayedTransition(fakeNavBar, transition);
+                if(i == 2){
+                    fakeNavBarSpacer.setVisibility(View.GONE);
+                    addBtn.setVisibility(View.GONE);
+                }
+                else{
+                    String[] btn_titles = {"Create Dept.", "Create Job"};
+                    addBtn.setText(btn_titles[i]);
+                    addBtn.setVisibility(View.VISIBLE);
+                    fakeNavBarSpacer.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -134,9 +156,9 @@ public class AdminFragment extends Fragment {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.memo_list, container, false);
+            View rootView = inflater.inflate(R.layout.admin_item_list, container, false);
 
-            mRecyclerView = rootView.findViewById(R.id.memo_list);
+            mRecyclerView = rootView.findViewById(R.id.admin_item_list);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             assert mRecyclerView != null;
 

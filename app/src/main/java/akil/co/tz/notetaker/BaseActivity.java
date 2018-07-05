@@ -1,6 +1,8 @@
 package akil.co.tz.notetaker;
 
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -47,6 +49,8 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         setContentView(R.layout.activity_base);
 
         container = findViewById(R.id.container);
@@ -93,7 +97,9 @@ public class BaseActivity extends AppCompatActivity {
             View v = bottomNavigationMenuView.getChildAt(mNotificationsIdx);
 
             if(v != null){
-                notifications_badge = new QBadgeView(this).bindTarget(v).setBadgeNumber(5);
+                notifications_badge = new QBadgeView(this).bindTarget(v)
+                        .setBadgeNumber(5)
+                        .setBadgeBackgroundColor(Color.parseColor("#ffa500"));
                 notifications_badge.isExactMode();
             }
             else

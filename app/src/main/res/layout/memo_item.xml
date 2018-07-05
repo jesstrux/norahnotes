@@ -30,7 +30,7 @@
             android:id="@+id/content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
+            android:maxLines="2"
             android:ellipsize="marquee"
             android:text="Click to edit note"
             android:textSize="16dp"
@@ -39,17 +39,15 @@
             android:fontFamily="@font/lustria"
             android:letterSpacing="0.06"/>
 
-        <HorizontalScrollView
-            android:id="@+id/attachment_holder"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/attachment_count"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:visibility="gone">
-            <TextView
-                android:id="@+id/attachment_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </HorizontalScrollView>
+            android:layout_marginTop="6dp"
+            android:drawableLeft="@drawable/ic_attachment"
+            android:drawablePadding="6dp"
+            android:drawableTint="#ffa500"
+            android:visibility="gone"
+            android:textColor="#888"/>
     </LinearLayout>
 </android.support.v7.widget.CardView>

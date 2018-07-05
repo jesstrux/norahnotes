@@ -122,10 +122,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         PendingIntent pendingIntent = deepLinkBuilder.createPendingIntent();
 
         String channelId = "admin";
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri defaultSoundUri = Uri.parse("android.resource://"+getApplicationContext().getPackageName()+"/"+R.raw.unconvinced);
+
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.drawable.ic_add_circle)
+                        .setSmallIcon(R.drawable.small_logo)
                         .setContentTitle(title)
                         .setContentText(messageBody)
                         .setAutoCancel(true)

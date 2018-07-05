@@ -71,11 +71,11 @@ public class NoteDetailActivity extends AppCompatActivity {
                 if (scrollY <= 100) {
                     appBar.setElevation(0);
                     toolbar.setTitle("");
-                    title_bar.setVisibility(View.VISIBLE);
+//                    title_bar.setVisibility(View.VISIBLE);
                 }else{
-                    appBar.setElevation(5);
-                    toolbar.setTitle(post_title);
-                    title_bar.setVisibility(View.INVISIBLE);
+                    appBar.setElevation(2);
+//                    toolbar.setTitle(post_title);
+//                    title_bar.setVisibility(View.INVISIBLE);
                 }
             }
         });

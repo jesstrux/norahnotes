@@ -191,7 +191,7 @@ public class MemosFragment extends Fragment {
 
                     if(response.body() != null) {
                         String response_str = response.body().string();
-                        Log.d("WOURA", "Server response: " + response_str);
+//                        Log.d("WOURA", "Server response: " + response_str);
 
                         ArrayList<Memo> memos = new Gson().fromJson(response_str.toString(), new TypeToken<List<Memo>>(){}.getType());
                         ArrayList<Memo> result_memos = new ArrayList<>();

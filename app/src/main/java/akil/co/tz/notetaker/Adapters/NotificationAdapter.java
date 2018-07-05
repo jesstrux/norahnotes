@@ -9,7 +9,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import akil.co.tz.notetaker.R;
-import akil.co.tz.notetaker.models.Memo;
 import akil.co.tz.notetaker.models.Notification;
 
 /**
@@ -46,7 +45,7 @@ public class NotificationAdapter
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.note_list_content, parent, false);
+                .inflate(R.layout.notification_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -57,10 +56,13 @@ public class NotificationAdapter
         Boolean has_title = title != null;
 
         if(has_title)
-            holder.mIdView.setText(title);
+            holder.mTitleView.setText(title);
 
         if(notification.getMessage() != null)
-            holder.mContentView.setText(notification.getMessage());
+            holder.mMessageView.setText(notification.getMessage());
+
+        if(position == getItemCount() - 1)
+            holder.mSeparatorView.setVisibility(View.GONE);
     }
 
     @Override
@@ -69,13 +71,15 @@ public class NotificationAdapter
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        final TextView mIdView;
-        final TextView mContentView;
+        final TextView mTitleView;
+        final TextView mMessageView;
+        final View mSeparatorView;
 
         ViewHolder(View view) {
             super(view);
-            mIdView = view.findViewById(R.id.id_text);
-            mContentView = view.findViewById(R.id.content);
+            mTitleView = view.findViewById(R.id.title_view);
+            mMessageView = view.findViewById(R.id.message_view);
+            mSeparatorView = view.findViewById(R.id.separator_view);
         }
     }
 }

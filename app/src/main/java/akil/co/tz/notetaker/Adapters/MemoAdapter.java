@@ -60,7 +60,6 @@ public class MemoAdapter
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Memo memo = mValues.get(position);
         String title = memo.getTitle();
-        Boolean has_title = title != null;
 
         if(memo.getType().equals("Inbox"))
             holder.mIdView.setText(memo.getSenderName() + "  >  " + memo.getTitle());
@@ -71,8 +70,10 @@ public class MemoAdapter
             holder.mContentView.setText(memo.getBody());
 
         if(memo.getAttachments() != null && memo.getAttachments().size() > 0){
-            holder.mAttachmentsWrapperView.setVisibility(View.VISIBLE);
-            holder.mAttachmentiew.setText("" + memo.getAttachments().size() + " attachments.");
+            holder.mAttachmentTview.setVisibility(View.VISIBLE);
+            holder.mAttachmentTview.setText("" + memo.getAttachments().size() + " attachments.");
+
+            holder.mContentView.setSingleLine(true);
         }
 
         holder.itemView.setTag(mValues.get(position));
@@ -87,15 +88,13 @@ public class MemoAdapter
     class ViewHolder extends RecyclerView.ViewHolder {
         final TextView mIdView;
         final TextView mContentView;
-        final HorizontalScrollView mAttachmentsWrapperView;
-        final TextView mAttachmentiew;
+        final TextView mAttachmentTview;
 
         ViewHolder(View view) {
             super(view);
             mIdView = view.findViewById(R.id.id_text);
             mContentView = view.findViewById(R.id.content);
-            mAttachmentsWrapperView = view.findViewById(R.id.attachment_holder);
-            mAttachmentiew = view.findViewById(R.id.attachment_count);
+            mAttachmentTview = view.findViewById(R.id.attachment_count);
         }
     }
 }

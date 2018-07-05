@@ -26,19 +26,26 @@
             app:layout_scrollFlags="snap">
 
             <LinearLayout
+                android:id="@+id/fake_navbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical"
+                android:gravity="center"
                 android:background="@android:color/transparent"
                 android:paddingRight="12dp"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:id="@+id/pageTitle"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Admin Area"
                     android:textAppearance="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title"/>
+
+                <View
+                    android:id="@+id/fake_navbar_spacer"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
 
                 <Button
                     android:id="@+id/addBtn"
@@ -63,7 +70,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabIndicatorColor="#333333"
-            app:tabMode="scrollable">
+            app:tabMode="scrollable"
+            android:background="@drawable/border_bottom">
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tabDepartments"

@@ -75,7 +75,7 @@ public class NotificationListFragment extends Fragment implements NoteListActivi
         assert mRecyclerView != null;
         setupRecyclerView(mRecyclerView);
 
-        final AppBarLayout appBar = activity.findViewById(R.id.app_bar);
+        final AppBarLayout appBar = rootView.findViewById(R.id.app_bar);
 
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
