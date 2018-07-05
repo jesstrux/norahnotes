@@ -3,31 +3,44 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
-    app:startDestination="@id/dashboardFragment">
+    app:startDestination="@id/navigation_dashboard">
 
     <fragment
-        android:id="@+id/notificationListFragment"
+        android:id="@+id/navigation_notifications"
         android:name="akil.co.tz.notetaker.NotificationListFragment"
-        android:label="fragment_notifications"
+        android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
     <fragment
-        android:id="@+id/memosFragment"
+        android:id="@+id/navigation_memos"
         android:name="akil.co.tz.notetaker.MemosFragment"
-        android:label="fragment_memos"
+        android:label="@string/title_memos"
         tools:layout="@layout/fragment_memos" />
     <fragment
-        android:id="@+id/profileFragment"
+        android:id="@+id/navigation_profile"
         android:name="akil.co.tz.notetaker.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
     <fragment
-        android:id="@+id/dashboardFragment"
+        android:id="@+id/navigation_dashboard"
         android:name="akil.co.tz.notetaker.DashboardFragment"
-        android:label="fragment_dashboard"
+        android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
     <fragment
-        android:id="@+id/adminFragment"
+        android:id="@+id/navigation_admin"
         android:name="akil.co.tz.notetaker.AdminFragment"
         android:label="fragment_admin"
         tools:layout="@layout/fragment_admin" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="akil.co.tz.notetaker.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_dashboardFragment"
+            app:destination="@id/navigation_dashboard" />
+    </fragment>
 </navigation>

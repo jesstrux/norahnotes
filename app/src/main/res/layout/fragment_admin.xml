@@ -23,7 +23,40 @@
             android:layout_height="?attr/actionBarSize"
             app:popupTheme="@style/NoteTakerTheme.PopupOverlay"
             android:background="#fff"
-            app:layout_scrollFlags="snap"/>
+            app:layout_scrollFlags="snap">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:background="@android:color/transparent"
+                android:paddingRight="12dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Admin Area"
+                    android:textAppearance="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title"/>
+
+                <Button
+                    android:id="@+id/addBtn"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_border_black"
+                    android:drawableLeft="@drawable/ic_add_small"
+                    android:drawablePadding="5dp"
+                    android:minHeight="0dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="8dp"
+                    android:text="Create Dept."
+                    android:textColor="#333" />
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
@@ -54,33 +87,9 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout android:layout_width="match_parent"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/container"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <TextView
-            android:id="@+id/no_posts"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="20dp"
-            android:background="#fff"
-            android:paddingLeft="40dp"
-            android:paddingRight="40dp"
-            android:paddingBottom="80dp"
-            android:text="You don't have any notes, click the  +  icon to add some."/>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/note_list"
-            android:name="akil.co.tz.notetaker.NoteListFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="2dp"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"
-            android:clipToPadding="false"
-            tools:context="akil.co.tz.notetaker.NoteListActivity"
-            tools:listitem="@layout/note_list_content"/>
-    </FrameLayout>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 </android.support.design.widget.CoordinatorLayout>

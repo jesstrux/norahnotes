@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -33,6 +34,7 @@ import akil.co.tz.notetaker.Utils.NotificationUtil;
 import akil.co.tz.notetaker.models.Memo;
 import akil.co.tz.notetaker.models.Post;
 import akil.co.tz.notetaker.models.User;
+import androidx.navigation.Navigation;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -47,6 +49,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     SharedPreferences prefs;
     TextView full_name, role, is_offline, email, phone, department, position;
     User mUser;
+
+    Button logout_btn;
 
     public ProfileFragment() {
     }
@@ -70,6 +74,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+//        logout_btn = rootView.findViewById(R.id.logout_btn);
+//        logout_btn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.adminFragment));
 
         reflectOfflineState();
 
@@ -112,28 +119,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         });
 
         return rootView;
-    }
-
-    public void logout(View view){
-        if(mUser != null){
-            if(mUser.getDepartment() != null)
-                FirebaseMessaging.getInstance().unsubscribeFromTopic(mUser.getDepartment().replaceAll("\\s+",""));
-
-            if(mUser.getRole() != null)
-                FirebaseMessaging.getInstance().unsubscribeFromTopic(mUser.getRole().replaceAll("\\s+",""));
-        }
-
-        SharedPreferences prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("saved_user", null);
-        editor.putString("subscribed_to_department", null);
-        editor.putString("subscribed_to_role", null);
-        editor.commit();
-
-        NotificationUtil notificationUtil = new NotificationUtil();
-        notificationUtil.emptyNotifications(getActivity().getApplicationContext());
-
-        startActivity(new Intent(getActivity(), LoginActivity.class));
     }
 
     private void reflectOfflineState() {

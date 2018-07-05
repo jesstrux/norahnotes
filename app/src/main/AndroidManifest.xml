@@ -15,13 +15,7 @@
         android:theme="@style/NoteTakerTheme">
         <activity
             android:name=".SplashScreen"
-            android:theme="@style/NoteTakerTheme.NoActionBar.Splash">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/NoteTakerTheme.NoActionBar.Splash"/>
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
@@ -70,9 +64,18 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/NoteTakerTheme.NoActionBar" />
+
         <activity
             android:name=".BaseActivity"
-            android:label="@string/title_activity_base" android:theme="@style/NoteTakerTheme.NoActionBar"/>
+            android:label="@string/title_activity_base" android:theme="@style/NoteTakerTheme.NoActionBar" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>

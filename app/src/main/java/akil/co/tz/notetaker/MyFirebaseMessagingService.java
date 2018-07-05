@@ -34,6 +34,7 @@ import java.lang.reflect.Type;
 import akil.co.tz.notetaker.Utils.NotificationUtil;
 import akil.co.tz.notetaker.models.Notification;
 import akil.co.tz.notetaker.models.User;
+import androidx.navigation.NavDeepLinkBuilder;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
@@ -71,7 +72,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     if(user.getDepartment() != null)
                         FirebaseMessaging.getInstance().subscribeToTopic(user.getDepartment().replaceAll("\\s+",""));
 
-                    sendNotification("You have been activated!", "Hey " + user.getFirstName() + ", we will progress you in a moment.");
+                    sendNotification("You have been activated!", "Hey " + user.getFirstName() + ", we will progress you in a moment.", type);
 
                     Intent intent = new Intent("userActivated");
                     Bundle bundle = new Bundle();
@@ -90,7 +91,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String message = remoteMessage.getData().get("message");
 
             if(!offline){
-                sendNotification(title, message);
+                sendNotification(title, message, type);
                 Log.d(TAG, "Not offline, sending notification.");
             }else{
                 Log.d(TAG, "Offline, saving only.");
@@ -101,19 +102,24 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void goIn(User user){
-        Intent intent = new Intent(getBaseContext(), NoteListActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("mUser", user);
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
-
-    private void sendNotification(String title, String messageBody) {
+    private void sendNotification(String title, String messageBody, String type) {
         Intent intent = new Intent(this, SplashScreen.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+//                PendingIntent.FLAG_ONE_SHOT);
+
+        NavDeepLinkBuilder deepLinkBuilder = new NavDeepLinkBuilder(this)
+                .setGraph(R.navigation.navigation_graph);
+
+        if(type != null && type.equals("MEMO_RECEIVED"))
+            deepLinkBuilder.setDestination(R.id.navigation_memos);
+        else if(type != null && type.equals("USER_REGISTERED"))
+            deepLinkBuilder.setDestination(R.id.navigation_admin);
+        else
+            deepLinkBuilder.setDestination(R.id.navigation_notifications);
+
+        PendingIntent pendingIntent = deepLinkBuilder.createPendingIntent();
 
         String channelId = "admin";
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
