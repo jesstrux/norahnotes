@@ -134,9 +134,6 @@ public class NotificationListFragment extends Fragment {
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            NotificationManager n = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-            n.cancel("SMEMO", 0);
-
             notifications.clear();
             notifications.addAll(notificationUtil.getNotifications(appContext));
             adapter.notifyDataSetChanged();

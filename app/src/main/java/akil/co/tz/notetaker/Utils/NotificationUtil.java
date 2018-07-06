@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import akil.co.tz.notetaker.R;
 import akil.co.tz.notetaker.models.Notification;
 
 public class NotificationUtil {
@@ -18,8 +19,32 @@ public class NotificationUtil {
     public static final String DOZE_MODE_ON = "DOZE_MODE_ON";
     public static final String UNREAD_COUNT = "UNREAD_COUNT";
 
+    public static final String TYPE_MEMO_RECEIVED = "MEMO_RECEIVED";
+    public static final String TYPE_MEMO_REPLIED = "MEMO_REPLIED";
+    public static final String TYPE_USER_REGISTERED = "USER_REGISTERED";
+    public static final String TYPE_ACTIVATE_USER = "ACTIVATE_USER";
+
     public NotificationUtil() {
         super();
+    }
+
+    public static int getResIcon(String memo_type){
+        int icon = -1;
+        switch (memo_type){
+            case TYPE_MEMO_RECEIVED:
+                icon = R.drawable.ic_email;
+                break;
+
+            case TYPE_MEMO_REPLIED:
+                icon = R.drawable.ic_reply;
+                break;
+
+            case TYPE_USER_REGISTERED:
+                icon = R.drawable.ic_person_add;
+                break;
+        }
+
+        return icon;
     }
 
     public int getUnreadCount(Context context){

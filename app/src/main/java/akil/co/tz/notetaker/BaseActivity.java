@@ -132,6 +132,9 @@ public class BaseActivity extends AppCompatActivity {
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            NotificationManager n = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            n.cancel("SMEMO", 0);
+
             if(navigation.getSelectedItemId() != R.id.navigation_notifications)
                 showNotificationCount(notificationUtil.getUnreadCount(getApplicationContext()));
         }
