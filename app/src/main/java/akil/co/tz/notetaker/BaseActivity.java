@@ -1,5 +1,10 @@
 package akil.co.tz.notetaker;
 
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
@@ -12,6 +17,7 @@ import android.support.design.widget.NavigationView;
 import android.support.transition.Slide;
 import android.support.transition.TransitionManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -46,6 +52,10 @@ public class BaseActivity extends AppCompatActivity {
 
     NavController navController;
 
+    NotificationUtil notificationUtil;
+
+    BottomNavigationMenuView bottomNavigationMenuView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,26 +68,30 @@ public class BaseActivity extends AppCompatActivity {
         navController = Navigation.findNavController(findViewById(R.id.main_nav_host_fragment));
 
         prefs = getDefaultSharedPreferences(getApplicationContext());
-        offline = prefs.getBoolean("is_offline", false);
+
+        notificationUtil = new NotificationUtil();
 
         navigation = findViewById(R.id.navigation);
+        bottomNavigationMenuView = (BottomNavigationMenuView) navigation.getChildAt(0);
 
         NavigationUI.setupWithNavController(navigation, navController);
-        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                Log.d("WOURA", menuItem.getTitle().toString() + " selected");
+//        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+//                Log.d("WOURA", menuItem.getTitle().toString() + " selected");
+//
+//                NavigationUI.onNavDestinationSelected(menuItem, navController);
+//
+//                if(menuItem.getItemId() == R.id.navigation_notifications){
+//
+//                }
+//
+//                return true;
+//            }
+//        });
 
-                NavigationUI.onNavDestinationSelected(menuItem, navController);
-
-                if(menuItem.getItemId() == R.id.navigation_notifications){
-                    if(notifications_badge != null)
-                        notifications_badge.hide(true);
-                }
-
-                return true;
-            }
-        });
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(
+                mMessageReceiver, new IntentFilter("notificationCountAdded"));
 
         String strJson = prefs.getString("saved_user",null);
         Log.d("WOURA", "LOGGED USER: " + strJson);
@@ -92,18 +106,7 @@ public class BaseActivity extends AppCompatActivity {
                 }
             }
 
-            BottomNavigationMenuView bottomNavigationMenuView =
-                    (BottomNavigationMenuView) navigation.getChildAt(0);
-            View v = bottomNavigationMenuView.getChildAt(mNotificationsIdx);
-
-            if(v != null){
-                notifications_badge = new QBadgeView(this).bindTarget(v)
-                        .setBadgeNumber(5)
-                        .setBadgeBackgroundColor(Color.parseColor("#ffa500"));
-                notifications_badge.isExactMode();
-            }
-            else
-                Log.d("WOURA", "View out of bounds");
+            showNotificationCount(notificationUtil.getUnreadCount(getApplicationContext()));
 
             showNav();
         }else{
@@ -111,8 +114,36 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    private void showNotificationCount(int count){
+        View v = bottomNavigationMenuView.getChildAt(mNotificationsIdx);
+
+        if(v != null){
+            if(count > 0){
+                notifications_badge = new QBadgeView(this).bindTarget(v)
+                        .setBadgeNumber(count)
+                        .setBadgeBackgroundColor(Color.parseColor("#ffa500"));
+                notifications_badge.isExactMode();
+            }
+        }
+        else
+            Log.d("WOURA", "View out of bounds");
+    }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(navigation.getSelectedItemId() != R.id.navigation_notifications)
+                showNotificationCount(notificationUtil.getUnreadCount(getApplicationContext()));
+        }
+    };
+
     public void logout(View view){
         logout();
+    }
+
+    public void removeNotificationsBadge(){
+        if(notifications_badge != null)
+            notifications_badge.hide(true);
     }
 
     public void login(){

@@ -42,10 +42,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "WOURA";
     SharedPreferences prefs;
+    NotificationUtil notificationUtil;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         prefs = getDefaultSharedPreferences(getApplicationContext());
+        notificationUtil = new NotificationUtil();
 
         Log.d(TAG, "FirebaseMessage From: " + remoteMessage.getFrom());
 
@@ -97,8 +99,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 Log.d(TAG, "Offline, saving only.");
             }
 
-            NotificationUtil notificationUtil = new NotificationUtil();
             notificationUtil.addNotification(getApplicationContext(), new Notification(title, message));
+
+            Intent intent = new Intent("notificationCountAdded");
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
     }
 
@@ -131,6 +135,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         .setContentTitle(title)
                         .setContentText(messageBody)
                         .setAutoCancel(true)
+                        .setNumber(notificationUtil.getUnreadCount(getApplicationContext()))
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);
 

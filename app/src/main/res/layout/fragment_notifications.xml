@@ -37,11 +37,20 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="All Alerts"
+                    android:text="Alerts"
                     android:textAppearance="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title"/>
 
+                <ImageButton
+                    android:id="@+id/toggleDozeModeBtn"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_notify_on"
+                    android:minHeight="0dp"
+                    android:layout_marginRight="-12dp"/>
+
                 <Button
-                    android:id="@+id/addMemo"
+                    android:id="@+id/clearNotificationsBtn"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -65,19 +74,6 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:id="@+id/no_posts"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="20dp"
-            android:background="#fff"
-            android:paddingLeft="40dp"
-            android:paddingRight="40dp"
-            android:paddingBottom="80dp"
-            android:text="You don't have any notes, click the  +  icon to add some."/>
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/note_list"
             android:name="akil.co.tz.notetaker.NoteListFragment"
@@ -90,5 +86,19 @@
             tools:context="akil.co.tz.notetaker.NoteListActivity"
             tools:listitem="@layout/note_list_content"
             android:background="#fff"/>
+
+        <TextView
+            android:id="@+id/no_notifications"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:background="#fff"
+            android:textColor="#bbb"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:paddingBottom="80dp"
+            android:text="You don't have any alerts."/>
     </FrameLayout>
 </android.support.design.widget.CoordinatorLayout>

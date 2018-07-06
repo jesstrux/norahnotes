@@ -3,4 +3,10 @@
     <declare-styleable name="TintableImageView">
         <attr name="tintColorStateList" format="reference|color" />
     </declare-styleable>
+
+    <declare-styleable name="MemoAttachment">
+        <attr name="attachmentName" format="string" localization="suggested" />
+        <attr name="iconSrc" format="integer" />
+        <attr name="tintColor" format="string" />
+    </declare-styleable>
 </resources>

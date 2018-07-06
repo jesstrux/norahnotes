@@ -36,6 +36,15 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:focusableInTouchMode="true">
+
+            <akil.co.tz.notetaker.MemoAttachmentView
+                android:id="@+id/view1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:attachmentName="Math Quiz"
+                app:iconSrc="@drawable/ic_memos"
+                app:tintColor="#ccc" />
+
             <LinearLayout
                 android:id="@+id/title_bar"
                 android:layout_width="match_parent"

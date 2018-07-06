@@ -14,14 +14,47 @@ import akil.co.tz.notetaker.models.Notification;
 
 public class NotificationUtil {
     public static final String PREFS_NAME = "Notification_APP";
-    public static final String FAVORITES = "Notification_List";
+    public static final String NOTIFICATIONS = "Notification_List";
+    public static final String DOZE_MODE_ON = "DOZE_MODE_ON";
+    public static final String UNREAD_COUNT = "UNREAD_COUNT";
 
     public NotificationUtil() {
         super();
     }
 
-    // This four methods are used for maintaining favorites.
-    public void saveNotification(Context context, List<Notification> favorites) {
+    public int getUnreadCount(Context context){
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME,
+                Context.MODE_PRIVATE);
+        return settings.getInt(UNREAD_COUNT, 0);
+    }
+
+    public void setUnreadCount(Context context, int count){
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt(UNREAD_COUNT, count).commit();
+    }
+
+    public void addUnreadCount(Context context){
+        setUnreadCount(context, getUnreadCount(context) + 1);
+    }
+
+    public boolean isDozed(Context context){
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME,
+                Context.MODE_PRIVATE);
+        return settings.getBoolean(DOZE_MODE_ON, false);
+    }
+
+    public void toggleDozed(Context context){
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+
+        boolean is_dozed = settings.getBoolean(DOZE_MODE_ON, false);
+        editor.putBoolean(DOZE_MODE_ON, !is_dozed).commit();
+    }
+
+    public void saveNotification(Context context, List<Notification> notifications) {
         SharedPreferences settings;
         SharedPreferences.Editor editor;
 
@@ -30,57 +63,67 @@ public class NotificationUtil {
         editor = settings.edit();
 
         Gson gson = new Gson();
-        String jsonFavorites = gson.toJson(favorites);
+        String jsonNotifications = gson.toJson(notifications);
 
-        editor.putString(FAVORITES, jsonFavorites);
+        editor.putString(NOTIFICATIONS, jsonNotifications);
 
         editor.commit();
     }
 
     public void addNotification(Context context, Notification notification) {
-        List<Notification> favorites = getNotificaion(context);
-        if (favorites == null)
-            favorites = new ArrayList<>();
-        favorites.add(notification);
-        saveNotification(context, favorites);
+        List<Notification> notifications = getNotifications(context);
+        if (notifications == null)
+            notifications = new ArrayList<>();
+        notifications.add(notification);
+        saveNotification(context, notifications);
+
+        addUnreadCount(context);
     }
 
     public void removeNotification(Context context, Notification Notification) {
-        ArrayList<Notification> favorites = getNotificaion(context);
-        if (favorites != null) {
-            favorites.remove(Notification);
-            saveNotification(context, favorites);
+        ArrayList<Notification> notifications = getNotifications(context);
+        if (notifications != null) {
+            notifications.remove(Notification);
+            saveNotification(context, notifications);
         }
+    }
+
+    public int getNotificationCount(Context context) {
+        ArrayList<Notification> notifications = getNotifications(context);
+        if(notifications == null)
+            return 0;
+        else
+            return notifications.size();
     }
 
     public void emptyNotifications(Context context) {
-        ArrayList<Notification> favorites = getNotificaion(context);
-        if (favorites != null) {
-            favorites.clear();
-            saveNotification(context, favorites);
+        ArrayList<Notification> notifications = getNotifications(context);
+        if (notifications != null) {
+            notifications.clear();
+            saveNotification(context, notifications);
         }
     }
 
-    public ArrayList<Notification> getNotificaion(Context context) {
+    public ArrayList<Notification> getNotifications(Context context) {
         SharedPreferences settings;
-        List<Notification> favorites;
+        List<Notification> notifications;
 
         settings = context.getSharedPreferences(PREFS_NAME,
                 Context.MODE_PRIVATE);
 
-        if (settings.contains(FAVORITES)) {
-            String jsonFavorites = settings.getString(FAVORITES, null);
+        if (settings.contains(NOTIFICATIONS)) {
+            String jsonNotifications = settings.getString(NOTIFICATIONS, null);
             Gson gson = new Gson();
-            Notification[] favoriteItems = gson.fromJson(jsonFavorites,
+            Notification[] notificationItems = gson.fromJson(jsonNotifications,
                     Notification[].class);
 
-            favorites = Arrays.asList(favoriteItems);
-            favorites = new ArrayList<>(favorites);
+            notifications = Arrays.asList(notificationItems);
+            notifications = new ArrayList<>(notifications);
 
-            Collections.reverse(favorites);
+            Collections.reverse(notifications);
         } else
             return null;
 
-        return (ArrayList<Notification>) favorites;
+        return (ArrayList<Notification>) notifications;
     }
 }

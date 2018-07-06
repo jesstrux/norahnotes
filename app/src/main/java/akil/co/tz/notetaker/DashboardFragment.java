@@ -94,7 +94,7 @@ public class DashboardFragment extends Fragment {
 
         no_memos.setText("No recent memos found!");
 
-        memoAdapter = new MemoAdapter(memoList);
+        memoAdapter = new MemoAdapter(memoList, MemoAdapter.MEMO_ITEM_TYPE_FLAT);
         recyclerView.setAdapter(memoAdapter);
     }
 
@@ -124,8 +124,13 @@ public class DashboardFragment extends Fragment {
                     String response_str = response.body().string();
 
                     ArrayList<Memo> memos = new Gson().fromJson(response_str.toString(), new TypeToken<List<Memo>>(){}.getType());
+                    ArrayList<Memo> filtered_memos = new ArrayList<>();
+                    int len = memos.size() < 4 ? memos.size() : 4;
 
-                    return memos;
+                    for (int i = 0; i < len; i++)
+                        filtered_memos.add(memos.get(i));
+
+                    return filtered_memos;
                 }
 
                 return null;

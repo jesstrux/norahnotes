@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.transition.ChangeBounds;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -20,7 +22,9 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -43,6 +47,8 @@ public class LoginFragment extends Fragment {
     private UserLoginTask mAuthTask = null;
 
     private EditText mIpView, mEmailView, mPasswordView;
+    private LinearLayout mProgressWrapper;
+    private FrameLayout mLoginPage;
     private View mProgressView;
     private View mLoginFormView;
     private ImageView login_image;
@@ -101,8 +107,10 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        mLoginPage = rootView.findViewById(R.id.login_page);
         mLoginFormView = rootView.findViewById(R.id.login_form);
         mProgressView = rootView.findViewById(R.id.login_progress);
+        mProgressWrapper = rootView.findViewById(R.id.login_wrapper);
 
         return rootView;
     }
@@ -160,6 +168,12 @@ public class LoginFragment extends Fragment {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
+
+        final ChangeBounds transition = new ChangeBounds();
+        transition.setDuration(400L);
+        TransitionManager.beginDelayedTransition(mLoginPage, transition);
+
+        mProgressWrapper.setVisibility(show ? View.VISIBLE : View.GONE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 

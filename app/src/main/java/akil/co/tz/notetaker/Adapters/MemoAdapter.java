@@ -26,6 +26,11 @@ public class MemoAdapter
         extends RecyclerView.Adapter<MemoAdapter.ViewHolder> {
 
     private final List<Memo> mValues;
+    public static int MEMO_ITEM_TYPE_CARD = 1;
+    public static int MEMO_ITEM_TYPE_FLAT = 2;
+
+    private int memo_item_type = MEMO_ITEM_TYPE_CARD;
+
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -49,10 +54,21 @@ public class MemoAdapter
         mValues = items;
     }
 
+    public MemoAdapter(List<Memo> items, int type) {
+        mValues = items;
+        memo_item_type = type;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        View view;
+        if(memo_item_type == MEMO_ITEM_TYPE_CARD)
+            view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.memo_item, parent, false);
+        else
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.memo_item_flat, parent, false);
+
         return new ViewHolder(view);
     }
 
@@ -76,6 +92,10 @@ public class MemoAdapter
             holder.mContentView.setSingleLine(true);
         }
 
+        if(memo_item_type == MEMO_ITEM_TYPE_FLAT && position == getItemCount() - 1){
+            holder.mSeparatorView.setVisibility(View.INVISIBLE);
+        }
+
         holder.itemView.setTag(mValues.get(position));
         holder.itemView.setOnClickListener(mOnClickListener);
     }
@@ -89,12 +109,14 @@ public class MemoAdapter
         final TextView mIdView;
         final TextView mContentView;
         final TextView mAttachmentTview;
+        final View mSeparatorView;
 
         ViewHolder(View view) {
             super(view);
             mIdView = view.findViewById(R.id.id_text);
             mContentView = view.findViewById(R.id.content);
             mAttachmentTview = view.findViewById(R.id.attachment_count);
+            mSeparatorView = view.findViewById(R.id.separator_view);
         }
     }
 }

@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <HorizontalScrollView
-                android:scrollbarSize="1dp"
+                android:scrollbarSize="0dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -94,9 +94,10 @@
                                 android:gravity="center"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Opportunity Memos"
+                                android:text="Office Announcements"
                                 android:layout_marginRight="12dp"
                                 android:layout_marginLeft="12dp"
+                                android:layout_marginBottom="12dp"
                                 android:textSize="18dp"
                                 android:textColor="#000"/>
                         </LinearLayout>
@@ -172,6 +173,10 @@
                         </LinearLayout>
                     </android.support.v7.widget.CardView>
 
+                    <View
+                        android:layout_width="20dp"
+                        android:layout_height="1dp"/>
+
                 </LinearLayout>
             </HorizontalScrollView>
 
@@ -179,34 +184,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Recent Memos"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="28dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginBottom="12dp"
                 android:textSize="18dp"
-                android:textColor="#555"/>
+                android:textColor="#888"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#e8e8e8"
+                android:layout_marginBottom="20dp"/>
 
             <TextView
                 android:id="@+id/no_memos"
                 android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp"
                 android:gravity="center"
-                android:textSize="20dp"
-                android:background="#fff"
-                android:paddingLeft="40dp"
-                android:paddingRight="40dp"
-                android:paddingBottom="80dp"
+                android:textSize="19dp"
+                android:layout_marginTop="40dp"
+                android:textColor="#aaa"
                 android:text="No recent memos found."/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/memo_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"/>
+                android:clipToPadding="false"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>
