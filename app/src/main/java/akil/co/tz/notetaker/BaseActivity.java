@@ -31,6 +31,7 @@ import akil.co.tz.notetaker.models.User;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
+import me.leolin.shortcutbadger.ShortcutBadger;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 
@@ -89,6 +90,9 @@ public class BaseActivity extends AppCompatActivity {
 //                return true;
 //            }
 //        });
+
+        ShortcutBadger.removeCount(getApplicationContext()); //for 1.1.4+
+//        ShortcutBadger.with(getApplicationContext()).remove();  //for 1.1.3
 
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(
                 mMessageReceiver, new IntentFilter("notificationCountAdded"));

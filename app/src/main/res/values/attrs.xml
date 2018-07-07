@@ -6,7 +6,7 @@
 
     <declare-styleable name="MemoAttachment">
         <attr name="attachmentName" format="string" localization="suggested" />
-        <attr name="iconSrc" format="integer" />
-        <attr name="tintColor" format="string" />
+        <attr name="iconSrc" format="string" />
+        <attr name="tintColor" format="integer" />
     </declare-styleable>
 </resources>

@@ -21,9 +21,11 @@ public class Memo implements Serializable {
     private String senderName;
     private int senderId;
     private String type;
+    private String date;
     private ArrayList<Attachment> attachments;
+    private ArrayList<Ufs> ufs;
 
-    public Memo(int id, String title, String body, String senderName, int senderId, String recepientName, int recepientId, String type, ArrayList<Attachment> attachments) {
+    public Memo(int id, String title, String body, String senderName, int senderId, String recepientName, int recepientId, String type, ArrayList<Attachment> attachments, ArrayList<Ufs> ufs) {
         this.id = id;
         this.title = title;
         this.body = body;
@@ -34,8 +36,8 @@ public class Memo implements Serializable {
         this.senderId = senderId;
         this.type = type;
 
-        this.attachments.clear();
         this.attachments.addAll(attachments);
+        this.ufs.addAll(ufs);
     }
 
     public int getId() {
@@ -102,12 +104,39 @@ public class Memo implements Serializable {
         this.senderId = senderId;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     public ArrayList<Attachment> getAttachments() {
         return attachments;
     }
 
     public void setAttachments(ArrayList<Attachment> attachments) {
         this.attachments = attachments;
+    }
+
+    public ArrayList<Ufs> getUfs() {
+        return ufs;
+    }
+
+    public String[] getUfsNames() {
+        if(ufs.size() < 1)
+            return null;
+
+        String[] ufs_name_list = new String[ufs.size()];
+        for (int i = 0; i < ufs.size(); i++){
+            ufs_name_list[i] = ufs.get(i).getName();
+        }
+        return ufs_name_list;
+    }
+
+    public void setUfs(ArrayList<Ufs> ufs) {
+        this.ufs = ufs;
     }
 
     @Override

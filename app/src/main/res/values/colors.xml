@@ -9,5 +9,11 @@
     <color name="colorGreen">#7cef65</color>
     <color name="colorOrange">#ffa500</color>
 
+
+    <color name="tintDoc">#5555ff</color>
+    <color name="tintPdf">#FF5555</color>
+    <color name="tintXls">#338833</color>
+    <color name="tintImage">#c3a869</color>
+
     <color name="bgGrey">#EEEEEE</color>
 </resources>

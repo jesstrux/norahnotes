@@ -25,6 +25,7 @@ import akil.co.tz.notetaker.Utils.NotificationUtil;
 import akil.co.tz.notetaker.models.Notification;
 import akil.co.tz.notetaker.models.User;
 import androidx.navigation.NavDeepLinkBuilder;
+import me.leolin.shortcutbadger.ShortcutBadger;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
@@ -145,6 +146,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);
 
+        ShortcutBadger.applyCount(getApplicationContext(), notificationUtil.getUnreadCount(getApplicationContext())); //for 1.1.4+
+//        ShortcutBadger.with(getApplicationContext()).count(badgeCount); //for 1.1.3
+
         if(type != null){
             int large_icon = NotificationUtil.getResIcon(type);
             if(large_icon != -1){
@@ -152,7 +156,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             notificationBuilder.setPriority(android.app.Notification.PRIORITY_MAX);
         }
 
