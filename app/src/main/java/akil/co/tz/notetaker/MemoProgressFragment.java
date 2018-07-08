@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import akil.co.tz.notetaker.models.Memo;
@@ -64,8 +65,15 @@ public class MemoProgressFragment extends Fragment {
             }
         });
 
-        LinearLayout progressWrapper = rootView.findViewById(R.id.progressWrapper);
-        progressWrapper.addView(new ProgressView(getContext()));
+        Context appContext = getActivity().getApplicationContext();
+        RelativeLayout progressWrapper = rootView.findViewById(R.id.progressWrapper);
+        DifferentColorCircularBorder border = new DifferentColorCircularBorder(progressWrapper);
+        border.addBorderPortion(appContext, R.color.colorAccent, 0, 110);
+        border.addBorderPortion(appContext, R.color.colorAccent, 120, 230);
+        border.addBorderPortion(appContext, Color.parseColor("#DDDDDD"), 240, 350);
+//        border.addBorderPortion(appContext, 0xFF123456, 270, 360);
+
+//        progressWrapper.addView(new ProgressView(getContext()));
         return rootView;
     }
 
@@ -87,13 +95,14 @@ public class MemoProgressFragment extends Fragment {
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
             Paint p = new Paint();
-            p.setColor(Color.parseColor("#555555"));
+            p.setColor(Color.parseColor("#2196F3"));
             DashPathEffect dashPath = new DashPathEffect(new float[]{5,5}, (float)1.0);
-
             p.setPathEffect(dashPath);
             p.setStrokeWidth(4);
             p.setStrokeCap(Paint.Cap.ROUND);
             p.setStyle(Paint.Style.STROKE);
+            canvas.drawPaint(p);
+
             canvas.drawCircle(100, 100, 50, p);
 
             invalidate();
