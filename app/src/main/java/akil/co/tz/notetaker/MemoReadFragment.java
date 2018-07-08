@@ -218,22 +218,22 @@ public class MemoReadFragment extends Fragment {
                         showRepliesBtn.setTranslationX(showRepliesBtn.getWidth() / 3);
                         showRepliesBtn.setAlpha(0f);
                         showRepliesBtn.setVisibility(View.VISIBLE);
-                        showRepliesBtn.animate().setDuration(200).scaleX(1).translationX(0f).alpha(1)
+                        showRepliesBtn.animate().setDuration(150).scaleX(1).translationX(0f).alpha(1)
                                 .setInterpolator(new LinearOutSlowInInterpolator());
                     }
                 }
             },
-            200);
+            300);
     }
 
     private void hideFab(boolean realFab){
         if(realFab){
             replyBtn.setVisibility(View.INVISIBLE);
-            replyBtn.animate().setDuration(200).scaleX(0f).scaleY(0f).alpha(0f)
+            replyBtn.animate().setDuration(90).scaleX(0f).scaleY(0f).alpha(0f)
                     .setInterpolator(new LinearOutSlowInInterpolator());
         }else{
             showRepliesBtn.setVisibility(View.INVISIBLE);
-            showRepliesBtn.animate().setDuration(200).scaleX(0f).translationX(showRepliesBtn.getWidth() / 2).alpha(0f)
+            showRepliesBtn.animate().setDuration(90).scaleX(0f).translationX(showRepliesBtn.getWidth() / 2).alpha(0f)
                     .setInterpolator(new LinearOutSlowInInterpolator());
         }
     }
@@ -274,6 +274,6 @@ public class MemoReadFragment extends Fragment {
                     ((BaseActivity) getActivity()).showNav();
                 }
             },
-        50);
+        100);
     }
 }
