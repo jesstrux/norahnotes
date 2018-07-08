@@ -29,6 +29,7 @@ import java.util.List;
 
 import akil.co.tz.notetaker.models.Attachment;
 import akil.co.tz.notetaker.models.Memo;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
@@ -65,7 +66,6 @@ public class MemoReadFragment extends Fragment {
             }
         });
 
-        final LinearLayout title_bar = rootView.findViewById(R.id.title_bar);
         final TextView title = rootView.findViewById(R.id.title);
 
         final String memo_title = mItem.getTitle();
@@ -186,7 +186,10 @@ public class MemoReadFragment extends Fragment {
         replyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), "Replying to memo...", Toast.LENGTH_LONG).show();
+//                Toast.makeText(view.getContext(), "Replying to memo...", Toast.LENGTH_LONG).show();
+                Bundle b = new Bundle();
+                b.putSerializable("memo", mItem);
+                Navigation.findNavController(rootView).navigate(R.id.memoReplyFragment, b);
             }
         });
 
@@ -258,7 +261,10 @@ public class MemoReadFragment extends Fragment {
         showRepliesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), "See to memo replies...", Toast.LENGTH_LONG).show();
+//                Toast.makeText(view.getContext(), "See to memo replies...", Toast.LENGTH_LONG).show();
+                Bundle b = new Bundle();
+                b.putSerializable("memo", mItem);
+                Navigation.findNavController(rootView).navigate(R.id.memoProgressFragment, b);
             }
         });
 

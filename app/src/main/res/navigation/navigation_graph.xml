@@ -49,4 +49,16 @@
         android:label="MemoReadFragment" >
         <argument android:name="memo" />
     </fragment>
+    <fragment
+        android:id="@+id/memoReplyFragment"
+        android:name="akil.co.tz.notetaker.MemoReplyFragment"
+        android:label="MemoReplyFragment" >
+        <argument android:name="memo" />
+    </fragment>
+    <fragment
+        android:id="@+id/memoProgressFragment"
+        android:name="akil.co.tz.notetaker.MemoProgressFragment"
+        android:label="MemoProgressFragment" >
+        <argument android:name="memo" />
+    </fragment>
 </navigation>
