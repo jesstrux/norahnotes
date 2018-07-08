@@ -35,6 +35,8 @@ import akil.co.tz.notetaker.Data.AppDatabase;
 import akil.co.tz.notetaker.models.Memo;
 import akil.co.tz.notetaker.models.Post;
 import akil.co.tz.notetaker.models.User;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -42,7 +44,7 @@ import okhttp3.Response;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
-public class MemosFragment extends Fragment {
+public class MemosFragment extends Fragment implements MemoAdapter.ItemClickCallback {
     private static final int SCROLL_DIRECTION_UP = -1;
     public static final String ARG_ITEM_ID = "item_id";
     private Post mItem;
@@ -53,6 +55,7 @@ public class MemosFragment extends Fragment {
     private  int mPostition;
 
     AppBarLayout appBar;
+    View rootView;
 
     public MemosFragment() {
     }
@@ -66,7 +69,7 @@ public class MemosFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_memos, container, false);
+        rootView = inflater.inflate(R.layout.fragment_memos, container, false);
 
         appBar = rootView.findViewById(R.id.app_bar);
 
@@ -88,6 +91,13 @@ public class MemosFragment extends Fragment {
     public void setAppBarElevation(int elevation){
         if(appBar != null)
             appBar.setElevation(elevation);
+    }
+
+    @Override
+    public void onClick(Bundle b) {
+        ((BaseActivity)getActivity()).hideNav();
+        NavController navController = Navigation.findNavController(rootView);
+        navController.navigate(R.id.memoReadFragment, b);
     }
 
     public static class PlaceholderFragment extends android.support.v4.app.Fragment {
@@ -155,6 +165,7 @@ public class MemosFragment extends Fragment {
             no_posts.setText("No " + messages[getArguments().getInt(ARG_SECTION_NUMBER)] + " found!");
 
             memoAdapter = new MemoAdapter(memoList);
+            memoAdapter.setItemClickCallback((MemosFragment) getParentFragment());
             recyclerView.setAdapter(memoAdapter);
         }
 

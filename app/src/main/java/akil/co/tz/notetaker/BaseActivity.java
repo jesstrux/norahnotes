@@ -1,5 +1,7 @@
 package akil.co.tz.notetaker;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,17 +13,26 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.transition.ChangeBounds;
 import android.support.transition.Slide;
 import android.support.transition.TransitionManager;
+import android.support.transition.TransitionSet;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
+import android.widget.LinearLayout;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
@@ -39,7 +50,10 @@ import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 public class BaseActivity extends AppCompatActivity {
 
-    ConstraintLayout container;
+    LinearLayout container;
+    ConstraintSet constraintSetOld = new ConstraintSet();
+    ConstraintSet constraintSetNew = new ConstraintSet();
+    private boolean fullScreenSet = false;
 
     private User mUser;
     private Fragment mHostFragment;
@@ -65,6 +79,9 @@ public class BaseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_base);
 
         container = findViewById(R.id.container);
+
+//        constraintSetOld.clone(container);
+//        constraintSetNew.clone(this, R.layout.activity_base_alt);
 
         navController = Navigation.findNavController(findViewById(R.id.main_nav_host_fragment));
 
@@ -159,8 +176,69 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void showNav(){
-        TransitionManager.beginDelayedTransition(container, new Slide());
+        TransitionSet transitionSet = new TransitionSet();
+//        Slide transition = new Slide(Gravity.BOTTOM);
+//        transition.addTarget(navigation);
+//        transitionSet.addTransition(transition);
+//        Animation slide = new TranslateAnimation(0, 0, 0, 64);
+//        slide.setInterpolator(new LinearInterpolator());
+
+//        ChangeBounds transition2 = new ChangeBounds();
+//        transition2.setDuration(200L);
+//        transition2.addTarget(findViewById(R.id.main_nav_host_fragment));
+//        transitionSet.addTransition(transition2);
+//        transitionSet.setOrdering(TransitionSet.ORDERING_TOGETHER);
+
+//        TransitionManager.beginDelayedTransition(container, transitionSet);
+
+//        findViewById(R.id.main_nav_host_fragment).getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+//        navigation.setVisibility(View.VISIBLE);
+
+//        TransitionManager.beginDelayedTransition(container);
+//        constraintSetNew.applyTo(container);
+//        navigation.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+
         navigation.setVisibility(View.VISIBLE);
+        navigation.setAlpha(0.0f);
+
+        navigation.animate()
+                .translationY(0)
+                .alpha(1.0f)
+                .setListener(null);
+    }
+
+    public void hideNav(){
+//        TransitionManager.beginDelayedTransition(container);
+//        navigation.getLayoutParams().height = 0;
+//        constraintSetOld.applyTo(container);
+
+//        TransitionManager.beginDelayedTransition(container, new Slide());
+//        navigation.setVisibility(View.GONE);
+
+//        TransitionSet transitionSet = new TransitionSet();
+//        Slide transition = new Slide(Gravity.BOTTOM);
+//        transition.addTarget(navigation);
+//        transitionSet.addTransition(transition);
+//
+//        ChangeBounds transition2 = new ChangeBounds();
+//        transition2.addTarget(findViewById(R.id.main_nav_host_fragment));
+//        transitionSet.addTransition(transition2);
+//        transitionSet.setOrdering(TransitionSet.ORDERING_TOGETHER);
+//
+//        TransitionManager.beginDelayedTransition(container, transitionSet);
+//        findViewById(R.id.main_nav_host_fragment).getLayoutParams().height = 0;
+//        navigation.setVisibility(View.GONE);
+
+        navigation.animate()
+                .translationY(navigation.getHeight())
+                .alpha(0.0f)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        navigation.setVisibility(View.GONE);
+                    }
+                });
     }
 
     private void logout(){
@@ -183,8 +261,7 @@ public class BaseActivity extends AppCompatActivity {
 
         navController.navigate(R.id.loginFragment);
 
-        TransitionManager.beginDelayedTransition(container, new Slide());
-        navigation.setVisibility(View.GONE);
+        hideNav();
     }
 
 }

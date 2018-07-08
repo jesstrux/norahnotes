@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import akil.co.tz.notetaker.NoteDetailActivity;
 import akil.co.tz.notetaker.NoteEditActivity;
+import akil.co.tz.notetaker.NoteListActivity;
 import akil.co.tz.notetaker.R;
 import akil.co.tz.notetaker.Utils.StringUtil;
 import akil.co.tz.notetaker.models.Memo;
@@ -21,6 +23,7 @@ import akil.co.tz.notetaker.models.Memo;
 /**
  * Created by DevDept on 6/14/18.
  */
+
 
 public class MemoAdapter
         extends RecyclerView.Adapter<MemoAdapter.ViewHolder> {
@@ -30,6 +33,16 @@ public class MemoAdapter
     public static int MEMO_ITEM_TYPE_FLAT = 2;
 
     private int memo_item_type = MEMO_ITEM_TYPE_CARD;
+
+    private ItemClickCallback itemClickCallback;
+
+    public interface ItemClickCallback{
+        void onClick(Bundle b);
+    }
+
+    public void setItemClickCallback(final ItemClickCallback itemClickCallback){
+        this.itemClickCallback = itemClickCallback;
+    }
 
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
@@ -44,9 +57,17 @@ public class MemoAdapter
 
             Bundle bundle = new Bundle();
             bundle.putSerializable("memo", item);
-            intent.putExtras(bundle);
 
-            context.startActivity(intent);
+            if(itemClickCallback != null){
+                itemClickCallback.onClick(bundle);
+                Log.d("WOURA", "Going to inner fragment...");
+            }
+            else{
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+                Log.d("WOURA", "Going to activity...");
+            }
+
         }
     };
 

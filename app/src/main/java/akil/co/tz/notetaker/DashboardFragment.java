@@ -25,6 +25,7 @@ import java.util.List;
 import akil.co.tz.notetaker.Adapters.MemoAdapter;
 import akil.co.tz.notetaker.models.Memo;
 import akil.co.tz.notetaker.models.User;
+import androidx.navigation.Navigation;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -32,7 +33,7 @@ import okhttp3.Response;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
-public class DashboardFragment extends Fragment {
+public class DashboardFragment extends Fragment implements MemoAdapter.ItemClickCallback {
     private static final int SCROLL_DIRECTION_UP = -1;
 
     public DashboardFragment() {
@@ -47,11 +48,12 @@ public class DashboardFragment extends Fragment {
     ArrayList<Memo> memoList = new ArrayList<>();
     MemoAdapter memoAdapter;
     User mUser;
+    View rootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
         SharedPreferences prefs = getDefaultSharedPreferences(getActivity().getApplicationContext());
         String userJson = prefs.getString("saved_user",null);
         mUser = new Gson().fromJson(userJson, User.class);
@@ -95,7 +97,14 @@ public class DashboardFragment extends Fragment {
         no_memos.setText("No recent memos found!");
 
         memoAdapter = new MemoAdapter(memoList, MemoAdapter.MEMO_ITEM_TYPE_FLAT);
+        memoAdapter.setItemClickCallback(this);
         recyclerView.setAdapter(memoAdapter);
+    }
+
+    @Override
+    public void onClick(Bundle b) {
+        ((BaseActivity) getActivity()).hideNav();
+        Navigation.findNavController(rootView).navigate(R.id.memoReadFragment, b);
     }
 
     public class MemoFetchTask extends AsyncTask<String, Void, ArrayList<Memo>> {

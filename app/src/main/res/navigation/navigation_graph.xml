@@ -43,4 +43,10 @@
             android:id="@+id/action_loginFragment_to_dashboardFragment"
             app:destination="@id/navigation_dashboard" />
     </fragment>
+    <fragment
+        android:id="@+id/memoReadFragment"
+        android:name="akil.co.tz.notetaker.MemoReadFragment"
+        android:label="MemoReadFragment" >
+        <argument android:name="memo" />
+    </fragment>
 </navigation>

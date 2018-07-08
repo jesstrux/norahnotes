@@ -8,6 +8,10 @@ public class Ufs implements Serializable {
     private String level;
     private String status;
 
+    public static int STATUS_UNKNOWN = 0;
+    public static int STATUS_ACCEPTED = 1;
+    public static int STATUS_REJECTED = 2;
+
     public Ufs(String name, String level, String status) {
         this.name = name;
         this.level = level;

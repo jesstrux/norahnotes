@@ -17,6 +17,10 @@ android {
         }
     }
 
+    lintOptions {
+        disable 'RestrictedApi'
+    }
+
     android.defaultConfig.vectorDrawables.useSupportLibrary = true
 }
 
