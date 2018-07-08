@@ -33,6 +33,8 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
@@ -54,6 +56,10 @@ public class BaseActivity extends AppCompatActivity {
     ConstraintSet constraintSetOld = new ConstraintSet();
     ConstraintSet constraintSetNew = new ConstraintSet();
     private boolean fullScreenSet = false;
+
+    LinearLayout progressWrapper;
+    ProgressBar progressBar;
+    TextView progressText;
 
     private User mUser;
     private Fragment mHostFragment;
@@ -79,6 +85,10 @@ public class BaseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_base);
 
         container = findViewById(R.id.container);
+
+        progressWrapper = findViewById(R.id.progress_wrapper);
+        progressBar = findViewById(R.id.progress_bar);
+        progressText = findViewById(R.id.progress_text);
 
 //        constraintSetOld.clone(container);
 //        constraintSetNew.clone(this, R.layout.activity_base_alt);
@@ -173,6 +183,17 @@ public class BaseActivity extends AppCompatActivity {
     public void login(){
         navigation.setSelectedItemId(R.id.navigation_dashboard);
         showNav();
+    }
+
+    public void showProgress(String text){
+        progressWrapper.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+        progressText.setText(text);
+    }
+
+    public void hideProgress(){
+        progressWrapper.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
     }
 
     public void showNav(){

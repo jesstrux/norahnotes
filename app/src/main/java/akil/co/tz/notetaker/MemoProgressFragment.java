@@ -87,7 +87,7 @@ public class MemoProgressFragment extends Fragment {
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
             Paint p = new Paint();
-            p.setColor(Color.parseColor("#777"));
+            p.setColor(Color.parseColor("#555555"));
             DashPathEffect dashPath = new DashPathEffect(new float[]{5,5}, (float)1.0);
 
             p.setPathEffect(dashPath);

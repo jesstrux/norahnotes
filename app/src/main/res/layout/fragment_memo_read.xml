@@ -164,8 +164,7 @@
                 android:textSize="20dp"
                 android:textColor="#333"
                 android:fontFamily="@font/lustria"
-                android:letterSpacing="0.06"
-                android:textIsSelectable="true"/>
+                android:letterSpacing="0.06"/>
 
             <LinearLayout
                 android:id="@+id/attachments_view"

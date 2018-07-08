@@ -1,43 +1,47 @@
 package akil.co.tz.notetaker;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Build;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
 
-import akil.co.tz.notetaker.models.Attachment;
+import org.json.JSONObject;
+
 import akil.co.tz.notetaker.models.Memo;
+import akil.co.tz.notetaker.models.User;
 import androidx.navigation.Navigation;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 public class MemoReplyFragment extends Fragment {
+    private MemoReplyTask memoReplyTask = null;
     Memo mItem;
     private View rootView;
-    EditText content;
+    EditText inputBox;
+    OkHttpClient client = new OkHttpClient();
 
     public MemoReplyFragment() {
     }
@@ -71,10 +75,11 @@ public class MemoReplyFragment extends Fragment {
             title.setText(memo_title);
         }
 
-        content = rootView.findViewById(R.id.note_detail);
-
-        TextView memoDate = rootView.findViewById(R.id.memo_date);
-        memoDate.setText(mItem.getDate());
+        inputBox = rootView.findViewById(R.id.note_reply);
+        inputBox.requestFocus();
+//        InputMethodManager imm = (InputMethodManager)
+//                getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//        imm.showSoftInput(inputBox, InputMethodManager.SHOW_IMPLICIT);
 
         TextView memoRecepient = rootView.findViewById(R.id.memo_recepient);
         memoRecepient.setText(mItem.getSenderName());
@@ -97,18 +102,70 @@ public class MemoReplyFragment extends Fragment {
         return rootView;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void sendReply(View view){
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(inputBox.getWindowToken(), 0);
 
-        LinearLayout receivedWrapper = rootView.findViewById(R.id.received_wrapper);
-        TextView memoSender = rootView.findViewById(R.id.memo_sender);
-
-        receivedWrapper.setVisibility(View.VISIBLE);
-        memoSender.setText(mItem.getSenderName());
+        ((BaseActivity) getActivity()).hideProgress();
+        new MemoReplyTask().execute(String.valueOf(mItem.getId()), inputBox.getText().toString());
     }
 
     private void goBack(){
         Navigation.findNavController(rootView).navigateUp();
+    }
+
+    public class MemoReplyTask extends AsyncTask<String, Void, String> {
+
+        private final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        MemoReplyTask() {
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                JSONObject obj = new JSONObject();
+                obj.put("memo_id", params[0]);
+                obj.put("content", params[1]);
+
+                SharedPreferences prefs = getDefaultSharedPreferences(getActivity().getApplicationContext());
+                String mUrl = prefs.getString("ip", null);
+
+                RequestBody body = RequestBody.create(JSON, obj.toString());
+
+                Request request = new Request.Builder()
+                        .url(mUrl + "/api/send_reply.php")
+                        .post(body)
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                ResponseBody response_body = response.body();;
+
+                if (response_body != null){
+                    return response_body.string();
+                }
+
+                return null;
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final String result) {
+            memoReplyTask = null;
+            ((BaseActivity) getActivity()).hideProgress();
+            Toast.makeText(getContext(), "Reply sent", Toast.LENGTH_SHORT).show();
+            goBack();
+        }
+
+        @Override
+        protected void onCancelled() {
+            memoReplyTask = null;
+            ((BaseActivity) getActivity()).hideProgress();
+        }
     }
 }
