@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import akil.co.tz.notetaker.models.Memo;
+import akil.co.tz.notetaker.models.Ufs;
 import androidx.navigation.Navigation;
 
 public class MemoProgressFragment extends Fragment {
@@ -68,12 +69,18 @@ public class MemoProgressFragment extends Fragment {
         Context appContext = getActivity().getApplicationContext();
         RelativeLayout progressWrapper = rootView.findViewById(R.id.progressWrapper);
         DifferentColorCircularBorder border = new DifferentColorCircularBorder(progressWrapper);
-        border.addBorderPortion(appContext, Color.parseColor("#ffa500"), 0, 110);
-        border.addBorderPortion(appContext, Color.parseColor("#ffa500"), 120, 230);
-        border.addBorderPortion(appContext, Color.parseColor("#DDDDDD"), 240, 350);
-//        border.addBorderPortion(appContext, 0xFF123456, 270, 360);
+        int pass = 360 / mItem.getUfs().size();
+        boolean completed = true;
+        for (int i = 0; i < mItem.getUfs().size(); i++){
+            Ufs ufs = mItem.getUfs().get(i);
+            if(Integer.valueOf(ufs.getStatus()) == Ufs.STATUS_UNKNOWN)
+                completed = false;
+            border.addBorderPortion(appContext, Color.parseColor(Integer.valueOf(ufs.getStatus()) == Ufs.STATUS_ACCEPTED ? "#ffa500" : "#DDDDDD"), pass * i, (pass * (i + 1) - 10));
+        }
 
-//        progressWrapper.addView(new ProgressView(getContext()));
+        TextView progressText = rootView.findViewById(R.id.progress_text);
+        progressText.setText(completed ? "PROCESSED" : "IN PROGRESS");
+
         return rootView;
     }
 
