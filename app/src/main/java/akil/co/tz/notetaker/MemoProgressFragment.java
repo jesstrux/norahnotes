@@ -15,11 +15,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import akil.co.tz.notetaker.models.Memo;
 import akil.co.tz.notetaker.models.Ufs;
@@ -81,7 +86,43 @@ public class MemoProgressFragment extends Fragment {
         TextView progressText = rootView.findViewById(R.id.progress_text);
         progressText.setText(completed ? "PROCESSED" : "IN PROGRESS");
 
+        ListView ufs_list = rootView.findViewById(R.id.ufs_list);
+        ufs_list.setAdapter(new UfsArrayAdapter(getContext(), mItem.getUfs()));
+
         return rootView;
+    }
+
+    private class UfsArrayAdapter extends ArrayAdapter<Ufs> {
+        private final Context ctx;
+        private final ArrayList<Ufs> items;
+
+        public UfsArrayAdapter(Context context,
+                                  ArrayList<Ufs> items) {
+            super(context, -1, items);
+            ctx = context;
+            this.items = items;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = (LayoutInflater) ctx
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View rowView = inflater.inflate(R.layout.ufs_item, parent, false);
+
+            TextView name = rowView.findViewById(R.id.ufs_name);
+            TextView response = rowView.findViewById(R.id.ufs_response);
+            View icon = rowView.findViewById(R.id.icon_view);
+
+            Ufs item = items.get(position);
+            if (Integer.valueOf(item.getStatus()) == Ufs.STATUS_ACCEPTED) {
+                icon.setBackgroundResource(R.color.colorAccent);
+            } else {
+                icon.setBackgroundResource(R.color.tintPdf);
+            }
+
+            return rowView;
+        }
+
     }
 
     @Override
