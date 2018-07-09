@@ -150,7 +150,7 @@ public class AdminFragment extends Fragment {
     public void showAddItem(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         String[] types = {"Department", "Job", "Staff"};
-        final String type = types[mPostition];
+        final String type = types[mPostition - 1];
         builder.setTitle("Add " + type);
 
         // Set up the input
