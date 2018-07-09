@@ -289,7 +289,7 @@ public class MemoReadFragment extends Fragment {
 
     private void showUfsReplies() {
         final CharSequence[] items = {
-                "Accept", "Decline"
+                "Approve", "Reject"
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
