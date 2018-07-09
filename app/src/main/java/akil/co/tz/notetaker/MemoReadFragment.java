@@ -369,6 +369,7 @@ public class MemoReadFragment extends Fragment {
         @Override
         protected void onPostExecute(final String result) {
             ((BaseActivity) getActivity()).hideProgress();
+            Log.d("WOURA", "Response from api: " + result);
             Toast.makeText(getContext(), "Reply sent", Toast.LENGTH_SHORT).show();
             goBack();
         }
