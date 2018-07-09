@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -77,6 +78,14 @@ public class MemoReplyFragment extends Fragment {
 
         inputBox = rootView.findViewById(R.id.note_reply);
         inputBox.requestFocus();
+
+        Button memoReplyBtn = rootView.findViewById(R.id.sendBtn);
+        memoReplyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendReply();
+            }
+        });
 //        InputMethodManager imm = (InputMethodManager)
 //                getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 //        imm.showSoftInput(inputBox, InputMethodManager.SHOW_IMPLICIT);
@@ -102,7 +111,7 @@ public class MemoReplyFragment extends Fragment {
         return rootView;
     }
 
-    public void sendReply(View view){
+    public void sendReply(){
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(inputBox.getWindowToken(), 0);
 

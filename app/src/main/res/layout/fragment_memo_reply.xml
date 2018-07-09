@@ -53,8 +53,7 @@
                     android:paddingRight="15dp"
                     android:paddingBottom="8dp"
                     android:text="SEND REPLY"
-                    android:textColor="#333"
-                    android:onClick="sendReply"/>
+                    android:textColor="#333"/>
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
 

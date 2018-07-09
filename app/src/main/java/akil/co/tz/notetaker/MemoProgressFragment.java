@@ -68,8 +68,8 @@ public class MemoProgressFragment extends Fragment {
         Context appContext = getActivity().getApplicationContext();
         RelativeLayout progressWrapper = rootView.findViewById(R.id.progressWrapper);
         DifferentColorCircularBorder border = new DifferentColorCircularBorder(progressWrapper);
-        border.addBorderPortion(appContext, R.color.colorAccent, 0, 110);
-        border.addBorderPortion(appContext, R.color.colorAccent, 120, 230);
+        border.addBorderPortion(appContext, Color.parseColor("#ffa500"), 0, 110);
+        border.addBorderPortion(appContext, Color.parseColor("#ffa500"), 120, 230);
         border.addBorderPortion(appContext, Color.parseColor("#DDDDDD"), 240, 350);
 //        border.addBorderPortion(appContext, 0xFF123456, 270, 360);
 

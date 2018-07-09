@@ -3,6 +3,7 @@ package akil.co.tz.notetaker;
 import android.app.Activity;
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,8 +14,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.transition.ChangeBounds;
 import android.transition.TransitionManager;
 import android.util.Log;
@@ -23,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +34,8 @@ import android.widget.Toast;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,6 +51,7 @@ import akil.co.tz.notetaker.models.User;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
@@ -64,6 +71,7 @@ public class AdminFragment extends Fragment {
     private LinearLayout fakeNavBar;
 
     AppBarLayout appBar;
+    private String m_Title;
 
     public AdminFragment() {
     }
@@ -92,6 +100,13 @@ public class AdminFragment extends Fragment {
         fakeNavBar = rootView.findViewById(R.id.fake_navbar);
         pageTitle = rootView.findViewById(R.id.pageTitle);
         fakeNavBarSpacer = rootView.findViewById(R.id.fake_navbar_spacer);
+
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showAddItem();
+            }
+        });
 
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
@@ -130,6 +145,38 @@ public class AdminFragment extends Fragment {
     public void setAppBarElevation(int elevation){
         if(appBar != null)
             appBar.setElevation(elevation);
+    }
+
+    public void showAddItem(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        String[] types = {"Department", "Job", "Staff"};
+        final String type = types[mPostition];
+        builder.setTitle("Add " + type);
+
+        // Set up the input
+        final EditText input = new EditText(getContext());
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                m_Title = input.getText().toString();
+
+                ((BaseActivity) getActivity()).showProgress("Saving " + type + "...");
+                new AdminAddTask().execute(type);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     public static class PlaceholderFragment extends android.support.v4.app.Fragment {
@@ -295,6 +342,75 @@ public class AdminFragment extends Fragment {
         @Override
         public int getCount() {
             return 3;
+        }
+    }
+
+    public class AdminAddTask extends AsyncTask<String, Void, String> {
+        private final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        @Override
+        protected String doInBackground(String... params) {
+            OkHttpClient client = new OkHttpClient();
+            SharedPreferences prefs = getDefaultSharedPreferences(getActivity().getApplicationContext());
+            String url = prefs.getString("ip", null);
+            String user_id = null;
+            String mType = null;
+
+            String userJson = prefs.getString("saved_user",null);
+            User user = new Gson().fromJson(userJson, User.class);
+            user_id = user.getId();
+
+            mType = params[0];
+
+            Log.d("WOURA", "Type is: " + mType);
+
+            if(url == null || user_id == null || mType == null)
+                return null;
+
+            url += "/api/add_"+params[0].toLowerCase()+".php";
+
+            try {
+                JSONObject obj = new JSONObject();
+                obj.put("name", m_Title);
+
+                RequestBody body = RequestBody.create(JSON, obj.toString());
+
+                Request.Builder builder = new Request.Builder();
+                builder.url(url);
+                builder.post(body);
+                Request request = builder.build();
+
+                Response response = client.newCall(request).execute();
+
+                if(response.body() != null) {
+                    String response_str = response.body().string();
+                    Log.d("WOURA", "Server response: " + response_str);
+
+                    return response_str;
+                }
+
+                return null;
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final String result) {
+            ((BaseActivity) getActivity()).hideProgress();
+            if(result != null){
+                Toast.makeText(getContext(), "Item added", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Log.d("WOURA", "Found no memos");
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+//            showProgress(false);
         }
     }
 }
