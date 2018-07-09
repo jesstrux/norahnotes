@@ -26,6 +26,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ import java.util.List;
 
 import akil.co.tz.notetaker.models.Attachment;
 import akil.co.tz.notetaker.models.Memo;
+import akil.co.tz.notetaker.models.User;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import okhttp3.MediaType;
@@ -297,7 +300,7 @@ public class MemoReadFragment extends Fragment {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 String res = items[item].toString();
-                new MemoReplyTask().execute(mItem.getId(), item);
+                new MemoReplyTask().execute(mItem.getId(), item + 1);
             }
         });
         AlertDialog alert = builder.create();
@@ -330,10 +333,16 @@ public class MemoReadFragment extends Fragment {
                 JSONObject obj = new JSONObject();
                 obj.put("memo_id", params[0]);
                 obj.put("for_ufs", "true");
-                obj.put("reply", params[1]);
+                obj.put("action", params[1]);
 
                 SharedPreferences prefs = getDefaultSharedPreferences(getActivity().getApplicationContext());
                 String mUrl = prefs.getString("ip", null);
+
+                String userJson = prefs.getString("saved_user",null);
+                User user = new Gson().fromJson(userJson, User.class);
+                String user_id = user.getId();
+
+                obj.put("user_id", user_id);
 
                 RequestBody body = RequestBody.create(JSON, obj.toString());
 

@@ -136,10 +136,17 @@ public class MemoReplyFragment extends Fragment {
             try {
                 JSONObject obj = new JSONObject();
                 obj.put("memo_id", params[0]);
+                obj.put("action", 2);
                 obj.put("content", params[1]);
 
                 SharedPreferences prefs = getDefaultSharedPreferences(getActivity().getApplicationContext());
                 String mUrl = prefs.getString("ip", null);
+
+                String userJson = prefs.getString("saved_user",null);
+                User user = new Gson().fromJson(userJson, User.class);
+                String user_id = user.getId();
+
+                obj.put("user_id", user_id);
 
                 RequestBody body = RequestBody.create(JSON, obj.toString());
 
