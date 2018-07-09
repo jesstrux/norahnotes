@@ -1,7 +1,9 @@
 package akil.co.tz.notetaker;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,6 +26,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +36,12 @@ import akil.co.tz.notetaker.models.Attachment;
 import akil.co.tz.notetaker.models.Memo;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
@@ -39,6 +50,7 @@ public class MemoReadFragment extends Fragment {
     FloatingActionButton replyBtn;
     Button showRepliesBtn;
     boolean is_sent = false;
+    OkHttpClient client = new OkHttpClient();
 
     private View rootView;
 
@@ -187,9 +199,13 @@ public class MemoReadFragment extends Fragment {
             @Override
             public void onClick(View view) {
 //                Toast.makeText(view.getContext(), "Replying to memo...", Toast.LENGTH_LONG).show();
+            if(mItem.isUfs())
+                showUfsReplies();
+            else{
                 Bundle b = new Bundle();
                 b.putSerializable("memo", mItem);
                 Navigation.findNavController(rootView).navigate(R.id.memoReplyFragment, b);
+            }
             }
         });
 
@@ -271,6 +287,23 @@ public class MemoReadFragment extends Fragment {
         showFab(false);
     }
 
+    private void showUfsReplies() {
+        final CharSequence[] items = {
+                "Accept", "Decline"
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Pick Response");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                String res = items[item].toString();
+                new MemoReplyTask().execute(mItem.getId(), item);
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     private void goBack(){
         hideFab(is_sent);
         new android.os.Handler().postDelayed(
@@ -281,5 +314,59 @@ public class MemoReadFragment extends Fragment {
                 }
             },
         100);
+    }
+
+    public class MemoReplyTask extends AsyncTask<Integer, Void, String> {
+
+        private final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        MemoReplyTask() {
+
+        }
+
+        @Override
+        protected String doInBackground(Integer... params) {
+            try {
+                JSONObject obj = new JSONObject();
+                obj.put("memo_id", params[0]);
+                obj.put("for_ufs", "true");
+                obj.put("reply", params[1]);
+
+                SharedPreferences prefs = getDefaultSharedPreferences(getActivity().getApplicationContext());
+                String mUrl = prefs.getString("ip", null);
+
+                RequestBody body = RequestBody.create(JSON, obj.toString());
+
+                Request request = new Request.Builder()
+                        .url(mUrl + "/api/send_reply.php")
+                        .post(body)
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                ResponseBody response_body = response.body();;
+
+                if (response_body != null){
+                    return response_body.string();
+                }
+
+                return null;
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final String result) {
+            ((BaseActivity) getActivity()).hideProgress();
+            Toast.makeText(getContext(), "Reply sent", Toast.LENGTH_SHORT).show();
+            goBack();
+        }
+
+        @Override
+        protected void onCancelled() {
+            ((BaseActivity) getActivity()).hideProgress();
+        }
     }
 }

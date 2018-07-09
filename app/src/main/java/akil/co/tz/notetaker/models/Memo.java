@@ -21,11 +21,12 @@ public class Memo implements Serializable {
     private String senderName;
     private int senderId;
     private String type;
+    private boolean is_ufs;
     private String date;
     private ArrayList<Attachment> attachments;
     private ArrayList<Ufs> ufs;
 
-    public Memo(int id, String title, String body, String senderName, int senderId, String recepientName, int recepientId, String type, ArrayList<Attachment> attachments, ArrayList<Ufs> ufs) {
+    public Memo(int id, String title, String body, String senderName, int senderId, String recepientName, int recepientId, String type, boolean is_ufs, ArrayList<Attachment> attachments, ArrayList<Ufs> ufs) {
         this.id = id;
         this.title = title;
         this.body = body;
@@ -35,6 +36,7 @@ public class Memo implements Serializable {
         this.senderName = senderName;
         this.senderId = senderId;
         this.type = type;
+        this.is_ufs = is_ufs;
 
         this.attachments.addAll(attachments);
         this.ufs.addAll(ufs);
@@ -86,6 +88,14 @@ public class Memo implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public boolean isUfs() {
+        return is_ufs;
+    }
+
+    public void setIsUfs(boolean is_ufs) {
+        this.is_ufs = is_ufs;
     }
 
     public String getSenderName() {
