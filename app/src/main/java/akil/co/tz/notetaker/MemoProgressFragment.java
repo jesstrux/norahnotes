@@ -85,7 +85,18 @@ public class MemoProgressFragment extends Fragment {
             Ufs ufs = mItem.getUfs().get(i);
             if(Integer.valueOf(ufs.getStatus()) == Ufs.STATUS_UNKNOWN)
                 completed = false;
-            border.addBorderPortion(appContext, Color.parseColor(Integer.valueOf(ufs.getStatus()) == Ufs.STATUS_ACCEPTED ? "#ffa500" : "#DDDDDD"), pass * i, (pass * (i + 1) - 10));
+
+            String color = "#DDDDD";
+            switch (Integer.valueOf(ufs.getStatus())){
+                case Ufs.STATUS_ACCEPTED:
+                    color = "#ffa500";
+                    break;
+                case Ufs.STATUS_REJECTED:
+                    color = "#DDDDDD";
+                    break;
+            }
+
+            border.addBorderPortion(appContext, Color.parseColor(color), pass * i, (pass * (i + 1) - 10));
         }
 
         TextView progressText = rootView.findViewById(R.id.progress_text);
