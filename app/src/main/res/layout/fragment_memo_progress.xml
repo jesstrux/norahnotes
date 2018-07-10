@@ -42,7 +42,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="200dp"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/progress_text"
@@ -64,7 +65,7 @@
                 android:layout_marginBottom="24dp"
                 android:visibility="visible"/>
 
-            <ListView
+            <android.support.v7.widget.RecyclerView
                 android:id="@+id/ufs_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

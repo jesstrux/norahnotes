@@ -11,7 +11,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +29,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import akil.co.tz.notetaker.Adapters.RepliesAdapter;
 import akil.co.tz.notetaker.models.Memo;
 import akil.co.tz.notetaker.models.Ufs;
 import androidx.navigation.Navigation;
@@ -73,6 +77,7 @@ public class MemoProgressFragment extends Fragment {
 
         Context appContext = getActivity().getApplicationContext();
         RelativeLayout progressWrapper = rootView.findViewById(R.id.progressWrapper);
+//        progressWrapper.addView(new ProgressViewOld(getContext()));
         DifferentColorCircularBorder border = new DifferentColorCircularBorder(progressWrapper);
         int pass = 360 / mItem.getUfs().size();
         boolean completed = true;
@@ -86,43 +91,11 @@ public class MemoProgressFragment extends Fragment {
         TextView progressText = rootView.findViewById(R.id.progress_text);
         progressText.setText(completed ? "PROCESSED" : "IN PROGRESS");
 
-        ListView ufs_list = rootView.findViewById(R.id.ufs_list);
-        ufs_list.setAdapter(new UfsArrayAdapter(getContext(), mItem.getUfs()));
+        RecyclerView ufs_list = rootView.findViewById(R.id.ufs_list);
+        ufs_list.setLayoutManager(new LinearLayoutManager(getContext()));
+        ufs_list.setAdapter(new RepliesAdapter(mItem.getUfs()));
 
         return rootView;
-    }
-
-    private class UfsArrayAdapter extends ArrayAdapter<Ufs> {
-        private final Context ctx;
-        private final ArrayList<Ufs> items;
-
-        public UfsArrayAdapter(Context context,
-                                  ArrayList<Ufs> items) {
-            super(context, -1, items);
-            ctx = context;
-            this.items = items;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) ctx
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(R.layout.ufs_item, parent, false);
-
-            TextView name = rowView.findViewById(R.id.ufs_name);
-            TextView response = rowView.findViewById(R.id.ufs_response);
-            View icon = rowView.findViewById(R.id.icon_view);
-
-            Ufs item = items.get(position);
-            if (Integer.valueOf(item.getStatus()) == Ufs.STATUS_ACCEPTED) {
-                icon.setBackgroundResource(R.color.colorAccent);
-            } else {
-                icon.setBackgroundResource(R.color.tintPdf);
-            }
-
-            return rowView;
-        }
-
     }
 
     @Override
@@ -134,8 +107,8 @@ public class MemoProgressFragment extends Fragment {
         Navigation.findNavController(rootView).navigateUp();
     }
 
-    private class ProgressView extends View{
-        public ProgressView(Context context){
+    private class ProgressViewOld extends View{
+        public ProgressViewOld(Context context){
             super(context);
         }
 

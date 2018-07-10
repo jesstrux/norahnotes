@@ -7,15 +7,14 @@
     android:paddingRight="12dp"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
-    android:background="#fff"
-    android:gravity="center_vertical">
+    android:background="#fff">
 
     <View
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:id="@+id/icon_view"
         android:layout_width="4dp"
-        android:layout_height="match_parent"
+        android:layout_height="50dp"
         android:padding="14dp"
         android:layout_marginRight="16dp"
         android:background="#DDDDDD"/>
@@ -28,7 +27,7 @@
         android:layout_height="wrap_content"
         android:textColor="#333"
         android:text="Title for Item 1"
-        android:textSize="18dp"
+        android:textSize="20dp"
         android:maxLines="1"
         android:paddingRight="30dp"
         android:ellipsize="end"/>
@@ -39,9 +38,10 @@
         android:layout_below="@+id/ufs_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#333"
+        android:textColor="#888"
         android:text="Accepted"
         android:textSize="16dp"
+        android:textAllCaps="true"
         android:maxLines="1"
         android:paddingRight="30dp"
         android:ellipsize="end"/>
