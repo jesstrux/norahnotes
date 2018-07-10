@@ -89,10 +89,10 @@ public class MemoProgressFragment extends Fragment {
             String color = "#DDDDD";
             switch (Integer.valueOf(ufs.getStatus())){
                 case Ufs.STATUS_ACCEPTED:
-                    color = "#ffa500";
+                    color = "#FFA500";
                     break;
                 case Ufs.STATUS_REJECTED:
-                    color = "#DDDDDD";
+                    color = "#FF5555";
                     break;
             }
 
