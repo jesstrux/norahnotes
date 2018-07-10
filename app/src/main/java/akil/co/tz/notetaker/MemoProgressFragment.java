@@ -80,14 +80,23 @@ public class MemoProgressFragment extends Fragment {
 //        progressWrapper.addView(new ProgressViewOld(getContext()));
         DifferentColorCircularBorder border = new DifferentColorCircularBorder(progressWrapper);
         int pass = 360 / mItem.getUfs().size();
-        boolean completed = true;
+        String progress = "IN PROGRESS";
+
         for (int i = 0; i < mItem.getUfs().size(); i++){
             Ufs ufs = mItem.getUfs().get(i);
-            if(Integer.valueOf(ufs.getStatus()) == Ufs.STATUS_UNKNOWN)
-                completed = false;
+            int status = Integer.valueOf(ufs.getStatus());
+
+            if(!progress.equals("REJECTED")){
+                if(status == Ufs.STATUS_UNKNOWN)
+                    progress = "IN PROGRESS";
+                else if(status == Ufs.STATUS_ACCEPTED)
+                    progress = "ACCEPTED";
+                else
+                    progress = "REJECTED";
+            }
 
             String color = "#DDDDD";
-            switch (Integer.valueOf(ufs.getStatus())){
+            switch (status){
                 case Ufs.STATUS_ACCEPTED:
                     color = "#FFA500";
                     break;
@@ -100,7 +109,7 @@ public class MemoProgressFragment extends Fragment {
         }
 
         TextView progressText = rootView.findViewById(R.id.progress_text);
-        progressText.setText(completed ? "PROCESSED" : "IN PROGRESS");
+        progressText.setText(progress);
 
         RecyclerView ufs_list = rootView.findViewById(R.id.ufs_list);
         ufs_list.setLayoutManager(new LinearLayoutManager(getContext()));
