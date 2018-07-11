@@ -6,7 +6,9 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -71,12 +73,27 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         is_offline_wrapper = rootView.findViewById(R.id.is_offline_wrapper);
         is_offline_switch = rootView.findViewById(R.id.is_offline_switch);
 
+        final AppBarLayout appBar = rootView.findViewById(R.id.app_bar);
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 //        logout_btn = rootView.findViewById(R.id.logout_btn);
 //        logout_btn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.adminFragment));
+
+        NestedScrollView note_detail_container = rootView.findViewById(R.id.nested_scroll_view);
+        note_detail_container.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            public static final String TAG = "WOURA";
+
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                Log.d("WOURA", "Scrolled");
+
+                if (scrollY <= 5) {
+                    appBar.setElevation(0);
+                }else{
+                    appBar.setElevation(5);
+                }
+            }
+        });
 
         reflectOfflineState();
 

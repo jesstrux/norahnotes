@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:id="@+id/details_wrapper"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:visibility="gone"
+    android:paddingLeft="28dp"
+    android:paddingRight="28dp">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:text="Role"
+            android:textSize="18dp"
+            android:minWidth="106dp"
+            android:layout_marginRight="12dp"/>
+
+        <TextView
+            android:id="@+id/role"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:textSize="16dp"
+            android:textColor="#333"
+            android:alpha="0.7"
+            android:fontFamily="@font/lustria"
+            android:letterSpacing="0.06"/>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:text="Email"
+            android:textSize="18dp"
+            android:minWidth="106dp"
+            android:layout_marginRight="12dp"/>
+
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:textSize="16dp"
+            android:textColor="#333"
+            android:alpha="0.7"
+            android:fontFamily="@font/lustria"
+            android:letterSpacing="0.06"/>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:text="Phone No."
+            android:textSize="18dp"
+            android:ellipsize="end"
+            android:minWidth="106dp"
+            android:layout_marginRight="12dp"/>
+
+        <TextView
+            android:id="@+id/phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:textSize="16dp"
+            android:textColor="#333"
+            android:alpha="0.7"
+            android:fontFamily="@font/lustria"
+            android:letterSpacing="0.06"/>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:text="Department"
+            android:textSize="18dp"
+            android:ellipsize="end"
+            android:minWidth="106dp"
+            android:layout_marginRight="12dp"/>
+
+        <TextView
+            android:id="@+id/department"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:textSize="16dp"
+            android:textColor="#333"
+            android:alpha="0.7"
+            android:paddingBottom="12dp"
+            android:fontFamily="@font/lustria"
+            android:letterSpacing="0.06"/>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:text="Position"
+            android:textSize="18dp"
+            android:ellipsize="end"
+            android:minWidth="106dp"
+            android:layout_marginRight="12dp"/>
+
+        <TextView
+            android:id="@+id/position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:textSize="16dp"
+            android:textColor="#333"
+            android:alpha="0.7"
+            android:fontFamily="@font/lustria"
+            android:letterSpacing="0.06"/>
+    </LinearLayout>
+
+</LinearLayout>

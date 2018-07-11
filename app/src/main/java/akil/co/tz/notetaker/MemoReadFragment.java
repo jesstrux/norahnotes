@@ -202,13 +202,7 @@ public class MemoReadFragment extends Fragment {
             @Override
             public void onClick(View view) {
 //                Toast.makeText(view.getContext(), "Replying to memo...", Toast.LENGTH_LONG).show();
-            if(mItem.isUfs())
-                showUfsReplies();
-            else{
-                Bundle b = new Bundle();
-                b.putSerializable("memo", mItem);
-                Navigation.findNavController(rootView).navigate(R.id.memoReplyFragment, b);
-            }
+            showUfsReplies();
             }
         });
 
@@ -292,15 +286,20 @@ public class MemoReadFragment extends Fragment {
 
     private void showUfsReplies() {
         final CharSequence[] items = {
-                "Approve", "Reject"
+                "Approve", "Reject", "Comment"
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Pick Response");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                String res = items[item].toString();
-                new MemoReplyTask().execute(mItem.getId(), item + 1);
+                if(item <= 1)
+                    new MemoReplyTask().execute(mItem.getId(), item + 1);
+                else{
+                    Bundle b = new Bundle();
+                    b.putSerializable("memo", mItem);
+                    Navigation.findNavController(rootView).navigate(R.id.memoReplyFragment, b);
+                }
             }
         });
         AlertDialog alert = builder.create();
@@ -332,8 +331,12 @@ public class MemoReadFragment extends Fragment {
             try {
                 JSONObject obj = new JSONObject();
                 obj.put("memo_id", params[0]);
-                obj.put("for_ufs", "true");
                 obj.put("action", params[1]);
+
+                Log.d("WOURA", "Memo is ufs : " + mItem.isUfs());
+
+                if(mItem.isUfs())
+                    obj.put("for_ufs", "true");
 
                 SharedPreferences prefs = getDefaultSharedPreferences(getActivity().getApplicationContext());
                 String mUrl = prefs.getString("ip", null);
@@ -369,6 +372,7 @@ public class MemoReadFragment extends Fragment {
         @Override
         protected void onPostExecute(final String result) {
             ((BaseActivity) getActivity()).hideProgress();
+            Log.d("WOURA", "Memo is ufs : " + mItem.isUfs());
             Log.d("WOURA", "Response from api: " + result);
             Toast.makeText(getContext(), "Reply sent", Toast.LENGTH_SHORT).show();
             goBack();

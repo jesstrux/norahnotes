@@ -26,8 +26,10 @@ public class Memo implements Serializable {
     private String date;
     private ArrayList<Attachment> attachments;
     private ArrayList<Ufs> ufs;
+    private ArrayList<MemoResponse> responses;
 
-    public Memo(int id, String title, String body, String senderName, int senderId, String recepientName, int recepientId, String type, boolean is_ufs, boolean ufs_complete, ArrayList<Attachment> attachments, ArrayList<Ufs> ufs) {
+    public Memo(int id, String title, String body, String senderName, int senderId, String recepientName, int recepientId, String type, boolean is_ufs,
+                boolean ufs_complete, ArrayList<Attachment> attachments, ArrayList<Ufs> ufs, ArrayList<MemoResponse> responses) {
         this.id = id;
         this.title = title;
         this.body = body;
@@ -42,6 +44,7 @@ public class Memo implements Serializable {
 
         this.attachments.addAll(attachments);
         this.ufs.addAll(ufs);
+        this.responses.addAll(responses);
     }
 
     public int getId() {
@@ -122,6 +125,14 @@ public class Memo implements Serializable {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public ArrayList<MemoResponse> getResponses() {
+        return responses;
+    }
+
+    public void setResponses(ArrayList<MemoResponse> responses) {
+        this.responses = responses;
     }
 
     public ArrayList<Attachment> getAttachments() {

@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import akil.co.tz.notetaker.Adapters.RepliesAdapter;
+import akil.co.tz.notetaker.Adapters.ResponseAdapter;
 import akil.co.tz.notetaker.models.Memo;
 import akil.co.tz.notetaker.models.Ufs;
 import androidx.navigation.Navigation;
@@ -75,45 +76,59 @@ public class MemoProgressFragment extends Fragment {
             }
         });
 
-        Context appContext = getActivity().getApplicationContext();
-        RelativeLayout progressWrapper = rootView.findViewById(R.id.progressWrapper);
-//        progressWrapper.addView(new ProgressViewOld(getContext()));
-        DifferentColorCircularBorder border = new DifferentColorCircularBorder(progressWrapper);
-        int pass = 360 / mItem.getUfs().size();
-        String progress = "IN PROGRESS";
+        if(mItem.getUfs() != null && mItem.getUfs().size() > 0){
+            Context appContext = getActivity().getApplicationContext();
+            RelativeLayout progressWrapper = rootView.findViewById(R.id.progressWrapper);
+            DifferentColorCircularBorder border = new DifferentColorCircularBorder(progressWrapper);
+            int pass = 360 / mItem.getUfs().size();
+            String progress = "IN PROGRESS";
 
-        for (int i = 0; i < mItem.getUfs().size(); i++){
-            Ufs ufs = mItem.getUfs().get(i);
-            int status = Integer.valueOf(ufs.getStatus());
+            for (int i = 0; i < mItem.getUfs().size(); i++){
+                Ufs ufs = mItem.getUfs().get(i);
+                int status = Integer.valueOf(ufs.getStatus());
 
-            if(!progress.equals("REJECTED")){
-                if(status == Ufs.STATUS_UNKNOWN)
-                    progress = "IN PROGRESS";
-                else if(status == Ufs.STATUS_ACCEPTED)
-                    progress = "ACCEPTED";
-                else
-                    progress = "REJECTED";
+                if(!progress.equals("REJECTED")){
+                    if(status == Ufs.STATUS_UNKNOWN)
+                        progress = "IN PROGRESS";
+                    else if(status == Ufs.STATUS_ACCEPTED)
+                        progress = "ACCEPTED";
+                    else
+                        progress = "REJECTED";
+                }
+
+                String color = "#DDDDDD";
+                switch (status){
+                    case Ufs.STATUS_ACCEPTED:
+                        color = "#338833";
+                        break;
+                    case Ufs.STATUS_REJECTED:
+                        color = "#FF5555";
+                        break;
+                }
+
+                border.addBorderPortion(appContext, Color.parseColor(color), pass * i, (pass * (i + 1) - 10));
             }
 
-            String color = "#DDDDD";
-            switch (status){
-                case Ufs.STATUS_ACCEPTED:
-                    color = "#FFA500";
-                    break;
-                case Ufs.STATUS_REJECTED:
-                    color = "#FF5555";
-                    break;
-            }
+            TextView progressText = rootView.findViewById(R.id.progress_text);
+            progressText.setText(progress);
 
-            border.addBorderPortion(appContext, Color.parseColor(color), pass * i, (pass * (i + 1) - 10));
+            View ufs_separator = rootView.findViewById(R.id.ufs_separator);
+            ufs_separator.setVisibility(View.VISIBLE);
+
+            RecyclerView ufs_list = rootView.findViewById(R.id.ufs_list);
+            ufs_list.setVisibility(View.VISIBLE);
+            ufs_list.setLayoutManager(new LinearLayoutManager(getContext()));
+            ufs_list.setAdapter(new RepliesAdapter(mItem.getUfs()));
         }
 
-        TextView progressText = rootView.findViewById(R.id.progress_text);
-        progressText.setText(progress);
-
-        RecyclerView ufs_list = rootView.findViewById(R.id.ufs_list);
-        ufs_list.setLayoutManager(new LinearLayoutManager(getContext()));
-        ufs_list.setAdapter(new RepliesAdapter(mItem.getUfs()));
+        if(mItem.getResponses() != null && mItem.getResponses().size() > 0){
+            RecyclerView ufs_responses = rootView.findViewById(R.id.response_list);
+            ufs_responses.setLayoutManager(new LinearLayoutManager(getContext()));
+            ufs_responses.setAdapter(new ResponseAdapter(mItem.getResponses()));
+        }else{
+            TextView no_responses = rootView.findViewById(R.id.no_responses_tview);
+            no_responses.setVisibility(View.VISIBLE);
+        }
 
         return rootView;
     }
@@ -136,7 +151,7 @@ public class MemoProgressFragment extends Fragment {
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
             Paint p = new Paint();
-            p.setColor(Color.parseColor("#2196F3"));
+            p.setColor(Color.parseColor("#338833"));
             DashPathEffect dashPath = new DashPathEffect(new float[]{5,5}, (float)1.0);
             p.setPathEffect(dashPath);
             p.setStrokeWidth(4);

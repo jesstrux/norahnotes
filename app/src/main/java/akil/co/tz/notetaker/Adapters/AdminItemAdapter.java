@@ -10,19 +10,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import akil.co.tz.notetaker.NoteDetailActivity;
 import akil.co.tz.notetaker.NoteEditActivity;
+import akil.co.tz.notetaker.NoteListActivity;
 import akil.co.tz.notetaker.R;
 import akil.co.tz.notetaker.models.AdminItem;
 import akil.co.tz.notetaker.models.Memo;
 
 public class AdminItemAdapter
-        extends RecyclerView.Adapter<AdminItemAdapter.ViewHolder> {
+        extends RecyclerView.Adapter<AdminItemAdapter.ViewHolder>{
 
     private final List<AdminItem> mValues;
+
+    private OnItemClickListener mListener;
+
+    public void setmListener(OnItemClickListener listener){
+        this.mListener = listener;
+    };
+
+    public interface OnItemClickListener {
+        void onClick(AdminItem item);
+    }
 
     public AdminItemAdapter(List<AdminItem> items) {
         mValues = items;
@@ -37,7 +49,7 @@ public class AdminItemAdapter
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         AdminItem adminItem = mValues.get(position);
 
         holder.mTitleView.setText(adminItem.getTitle());
@@ -51,7 +63,17 @@ public class AdminItemAdapter
         }
 
         holder.mIconView.setImageResource(icon);
-        holder.itemView.setTag(mValues.get(position));
+        holder.itemView.setTag(adminItem);
+
+        if(adminItem.getType().equals("Staff")){
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(mListener != null)
+                        mListener.onClick(mValues.get(holder.getAdapterPosition()));
+                }
+            });
+        }
     }
 
     @Override

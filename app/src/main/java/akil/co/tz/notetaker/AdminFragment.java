@@ -1,6 +1,7 @@
 package akil.co.tz.notetaker;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -152,7 +153,8 @@ public class AdminFragment extends Fragment {
             appBar.setElevation(elevation);
     }
 
-    public static class PlaceholderFragment extends android.support.v4.app.Fragment implements AdminFragment.OnFragmentInteractionListener {
+    public static class PlaceholderFragment extends android.support.v4.app.Fragment implements AdminFragment.OnFragmentInteractionListener,
+    AdminItemAdapter.OnItemClickListener{
         private static final String ARG_SECTION_NUMBER = "section_number";
         private String memos_url= "http://192.168.8.109:9000/api/my_memos.php?user_id=";
 
@@ -222,6 +224,7 @@ public class AdminFragment extends Fragment {
             no_posts.setText("No " + messages[idx] + " found!");
 
             adminItemAdapter = new AdminItemAdapter(adminItems);
+            adminItemAdapter.setmListener(this);
             recyclerView.setAdapter(adminItemAdapter);
         }
 
@@ -261,6 +264,17 @@ public class AdminFragment extends Fragment {
         @Override
         public void onAddClicked() {
             showAddItem();
+        }
+
+        @Override
+        public void onClick(AdminItem item) {
+            showDialog(0, item);
+        }
+
+        private void showDialog(int pos, AdminItem item){
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            StaffDialog staffDialog = StaffDialog.newInstance(pos, item.getUser());
+            staffDialog.show(fm, "view_staff");
         }
 
         public class AdminDataFetchTask extends AsyncTask<String, Void, ArrayList<AdminItem>> {

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:id="@+id/manage_wrapper"
+    android:visibility="gone">
+
+    <TextView
+        android:textAllCaps="true"
+        android:text="Role"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        android:layout_marginBottom="8dp"/>
+
+    <android.support.design.chip.ChipGroup
+        android:id="@+id/role_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        android:layout_marginBottom="20dp"
+        app:singleLine="true"
+        app:singleSelection="true">
+
+        <android.support.design.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            app:checkedIcon="@drawable/ic_check"
+            app:checkedIconEnabled="true"
+            android:id="@+id/role_unknown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="unknown"
+            app:textStartPadding="10dp"
+            app:textEndPadding="10dp"
+            app:chipBackgroundColor="@drawable/chip_color_state"
+            app:chipStrokeColor="#999"
+            app:chipStrokeWidth="1dp"/>
+
+        <android.support.design.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            app:checkedIcon="@drawable/ic_check"
+            app:checkedIconEnabled="true"
+            android:id="@+id/role_staff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="staff"
+            app:textStartPadding="20dp"
+            app:textEndPadding="20dp"
+            app:chipBackgroundColor="@drawable/chip_color_state"
+            app:chipStrokeColor="#999"
+            app:chipStrokeWidth="1dp"/>
+
+        <android.support.design.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            app:checkedIcon="@drawable/ic_check"
+            app:checkedIconEnabled="true"
+            android:id="@+id/role_Admin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="admin"
+            app:textStartPadding="10dp"
+            app:textEndPadding="10dp"
+            app:chipBackgroundColor="@drawable/chip_color_state"
+            app:chipStrokeColor="#999"
+            app:chipStrokeWidth="1dp"/>
+
+    </android.support.design.chip.ChipGroup>
+
+    <TextView
+        android:textAllCaps="true"
+        android:text="Activation"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        android:layout_marginBottom="8dp"/>
+
+    <android.support.design.chip.ChipGroup
+        android:id="@+id/activation_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        android:layout_marginBottom="20dp"
+        app:singleLine="true"
+        app:singleSelection="true">
+
+        <android.support.design.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            app:checkedIcon="@drawable/ic_check"
+            app:checkedIconEnabled="true"
+            android:id="@+id/activation_pending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="pending"
+            app:textStartPadding="10dp"
+            app:textEndPadding="10dp"
+            app:chipBackgroundColor="@drawable/chip_color_state"
+            app:chipStrokeColor="#999"
+            app:chipStrokeWidth="1dp"/>
+
+        <android.support.design.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            app:checkedIcon="@drawable/ic_check"
+            app:checkedIconEnabled="true"
+            android:id="@+id/activation_approved"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="approved"
+            app:textStartPadding="10dp"
+            app:textEndPadding="10dp"
+            app:chipBackgroundColor="@drawable/chip_color_state"
+            app:chipStrokeColor="#999"
+            app:chipStrokeWidth="1dp"/>
+
+        <android.support.design.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            app:checkedIcon="@drawable/ic_check"
+            app:checkedIconEnabled="true"
+            android:id="@+id/activation_declined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="declined"
+            app:textStartPadding="10dp"
+            app:textEndPadding="10dp"
+            app:chipBackgroundColor="@drawable/chip_color_state"
+            app:chipStrokeColor="#999"
+            app:chipStrokeWidth="1dp"/>
+
+    </android.support.design.chip.ChipGroup>
+
+    <TextView
+        android:textAllCaps="true"
+        android:text="Status"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        android:layout_marginBottom="8dp"/>
+
+    <android.support.design.chip.ChipGroup
+        android:id="@+id/status_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        app:singleLine="true"
+        app:singleSelection="true">
+
+        <android.support.design.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            app:checkedIcon="@drawable/ic_check"
+            app:checkedIconEnabled="true"
+            android:id="@+id/status_active"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="active"
+            app:textStartPadding="10dp"
+            app:textEndPadding="10dp"
+            app:chipBackgroundColor="@android:color/transparent"
+            app:chipStrokeColor="#999"
+            app:chipStrokeWidth="1dp"/>
+
+        <android.support.design.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            app:checkedIcon="@drawable/ic_check"
+            app:checkedIconEnabled="true"
+            android:id="@+id/status_inactive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="inactive"
+            app:textStartPadding="10dp"
+            app:textEndPadding="10dp"
+            app:chipBackgroundColor="@android:color/transparent"
+            app:chipStrokeColor="#999"
+            app:chipStrokeWidth="1dp"/>
+
+        <android.support.design.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            app:checkedIcon="@drawable/ic_check"
+            app:checkedIconEnabled="true"
+            android:id="@+id/status_blocked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="blocked"
+            android:textColor="#fff"
+            app:textStartPadding="10dp"
+            app:textEndPadding="10dp"
+            app:chipBackgroundColor="@android:color/transparent"
+            app:chipStrokeWidth="1dp"
+            app:chipStrokeColor="#999"/>
+
+    </android.support.design.chip.ChipGroup>
+
+</LinearLayout>

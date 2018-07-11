@@ -12,6 +12,8 @@ public class User implements Serializable {
     private String department;
     private String job;
     private String role;
+    private int status;
+    private int activation;
     private Boolean activated;
 
     public User() {
@@ -19,7 +21,8 @@ public class User implements Serializable {
     }
 
 //    @JsonCreator
-    public User(String id, String name, String email, String phone, String department, String job, String role, Boolean activated) {
+    public User(String id, String name, String email, String phone, String department, String job,
+                String role, int status, int activation, Boolean activated) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -27,6 +30,8 @@ public class User implements Serializable {
         this.department = department;
         this.job = job;
         this.role = role;
+        this.status = status;
+        this.activation = activation;
         this.activated = activated;
     }
 
@@ -96,5 +101,21 @@ public class User implements Serializable {
 
     public void setActivated(Boolean activated) {
         this.activated = activated;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getActivation() {
+        return activation;
+    }
+
+    public void setActivation(int activation) {
+        this.activation = activation;
     }
 }
