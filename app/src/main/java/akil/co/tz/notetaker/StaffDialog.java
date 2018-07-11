@@ -1,7 +1,5 @@
 package akil.co.tz.notetaker;
 
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -11,38 +9,17 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.transition.ChangeBounds;
-import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import akil.co.tz.notetaker.Adapters.AdminItemAdapter;
-import akil.co.tz.notetaker.Adapters.MemoAdapter;
-import akil.co.tz.notetaker.models.AdminItem;
-import akil.co.tz.notetaker.models.Memo;
 import akil.co.tz.notetaker.models.User;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-
-public class StaffDialog  extends DialogFragment implements View.OnClickListener {
+public class StaffDialog  extends DialogFragment {
     TextView cancelBtn, submitBtn;
     View btnSeparator;
     private int currentSection = 0;
@@ -102,22 +79,7 @@ public class StaffDialog  extends DialogFragment implements View.OnClickListener
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
-        cancelBtn = view.findViewById(R.id.cancel_btn);
-        submitBtn = view.findViewById(R.id.submit_btn);
-        btnSeparator = view.findViewById(R.id.btn_separator);
-
         ((TextView) view.findViewById(R.id.name)).setText(mUser.getName());
-
-        if(currentSection == 2){
-            submitBtn.setVisibility(View.VISIBLE);
-            btnSeparator.setVisibility(View.VISIBLE);
-        }else{
-            submitBtn.setVisibility(View.GONE);
-            btnSeparator.setVisibility(View.GONE);
-        }
-
-        cancelBtn.setOnClickListener(this);
-        submitBtn.setOnClickListener(this);
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
 
@@ -160,19 +122,12 @@ public class StaffDialog  extends DialogFragment implements View.OnClickListener
         mViewPager.setCurrentItem(currentSection);
     }
 
-    @Override
-    public void onClick(View view) {
-        if(view.getId() == R.id.cancel_btn)
-            closeDialog();
-        else if(view.getId() == R.id.submit_btn)
-            submitData();
-    }
-
     public void closeDialog(){
         this.dismiss();
     }
 
-    public void submitData(){
+    public void submitData(int newActivation, int newRole, int newStatus){
+        Toast.makeText(getContext(), "Action: " + newActivation + " newRole: " + newRole + " Status: " + newStatus, Toast.LENGTH_SHORT).show();
         closeDialog();
     }
 
@@ -185,13 +140,14 @@ public class StaffDialog  extends DialogFragment implements View.OnClickListener
         private ChipGroup roleOptions;
         private ChipGroup activationOptions;
         private ChipGroup statusOptions;
-        private TextView nameText, emailText, numberText, departmentText, positionText;
 
         private int newStatus = -1;
         private int newActivation = -1;
         private int newRole = -1;
 
         private View rootView;
+
+        TextView cancelBtn, submitBtn;
 
         public PlaceholderFragment() {}
 
@@ -226,6 +182,23 @@ public class StaffDialog  extends DialogFragment implements View.OnClickListener
         @Override
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
+
+            cancelBtn = view.findViewById(R.id.cancel_btn);
+            submitBtn = view.findViewById(R.id.submit_btn);
+
+            cancelBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((StaffDialog) getParentFragment()).dismiss();
+                }
+            });
+
+            submitBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((StaffDialog) getParentFragment()).submitData(newActivation, newRole, newStatus);
+                }
+            });
 
             if(section == 0){
                 setupDetail(view);
@@ -270,7 +243,7 @@ public class StaffDialog  extends DialogFragment implements View.OnClickListener
                             break;
                     }
 
-                    Toast.makeText(getContext(), "Activation changed to:" + newRole, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Role changed to:" + newRole, Toast.LENGTH_SHORT).show();
                 }
             });
 
