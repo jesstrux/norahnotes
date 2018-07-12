@@ -10,25 +10,50 @@
     android:background="#fff"
     android:gravity="center_vertical">
 
-    <ImageView
-        android:id="@+id/icon_view"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:padding="14dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/rounded_bg"
-        android:src="@drawable/ic_memos"
-        android:tint="#ffeecf"/>
-
-    <TextView
-        android:id="@+id/title_text"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:textColor="#333"
-        android:text="Title for Item 1"
-        android:textSize="18dp"
-        android:maxLines="1"
-        android:paddingRight="30dp"
-        android:ellipsize="end"/>
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/icon_view"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="14dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/rounded_bg"
+            android:src="@drawable/ic_memos"
+            android:tint="#ffeecf"/>
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textColor="#333"
+            android:text="Title for Item 1"
+            android:textSize="18dp"
+            android:maxLines="1"
+            android:paddingRight="30dp"
+            android:ellipsize="end"/>
+
+    </LinearLayout>
+
+    <Button
+        android:visibility="gone"
+        android:id="@+id/activate_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="30dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="14dp"
+        android:background="@drawable/rounded_border2"
+        android:textAllCaps="false"
+        android:drawableLeft="@drawable/ic_check"
+        android:drawablePadding="6dp"
+        android:text="Activate"
+        android:textColor="@color/tintXls"
+        android:drawableTint="@color/tintXls"/>
 </LinearLayout>

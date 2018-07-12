@@ -42,6 +42,8 @@ public class NotificationListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private TextView no_notifications;
 
+    View rootView;
+
     Context appContext;
 
     public NotificationListFragment() {
@@ -67,7 +69,7 @@ public class NotificationListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_notifications, container, false);
+        rootView = inflater.inflate(R.layout.fragment_notifications, container, false);
 
         no_notifications = rootView.findViewById(R.id.no_notifications);
         clearNotifcationsBtn = rootView.findViewById(R.id.clearNotificationsBtn);
@@ -93,42 +95,42 @@ public class NotificationListFragment extends Fragment {
             clearNotifcationsBtn.setAlpha(0.4f);
         }
 
-        mRecyclerView = rootView.findViewById(R.id.note_list);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        assert mRecyclerView != null;
-        setupRecyclerView(mRecyclerView);
-
-        final AppBarLayout appBar = rootView.findViewById(R.id.app_bar);
-
-
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if(appBar == null)
-                    return;
-
-                if (mRecyclerView.canScrollVertically(SCROLL_DIRECTION_UP)) {
-                    appBar.setElevation(5);
-                } else {
-                    appBar.setElevation(0);
-                }
-            }
-        });
+        setupRecyclerView();
 
         return rootView;
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        adapter = new NotificationAdapter(notifications);
-        recyclerView.setAdapter(adapter);
+    private void setupRecyclerView() {
+        final AppBarLayout appBar = rootView.findViewById(R.id.app_bar);
+
+        mRecyclerView = rootView.findViewById(R.id.note_list);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        if(mRecyclerView != null){
+            adapter = new NotificationAdapter(notifications);
+            mRecyclerView.setAdapter(adapter);
+
+            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                }
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if(appBar == null)
+                        return;
+
+                    if (mRecyclerView.canScrollVertically(SCROLL_DIRECTION_UP)) {
+                        appBar.setElevation(5);
+                    } else {
+                        appBar.setElevation(0);
+                    }
+                }
+            });
+        }
     }
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
@@ -136,7 +138,9 @@ public class NotificationListFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             notifications.clear();
             notifications.addAll(notificationUtil.getNotifications(appContext));
-            adapter.notifyDataSetChanged();
+
+            if(adapter != null)
+                adapter.notifyDataSetChanged();
 
             setNotificationsUi();
         }

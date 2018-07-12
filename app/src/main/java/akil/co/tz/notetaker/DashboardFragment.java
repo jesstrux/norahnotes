@@ -19,6 +19,8 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,18 +60,20 @@ public class DashboardFragment extends Fragment implements MemoAdapter.ItemClick
         String userJson = prefs.getString("saved_user",null);
         mUser = new Gson().fromJson(userJson, User.class);
 
-        if(mUser != null){
-            TextView dept_name = rootView.findViewById(R.id.dept_memos_title);
-            dept_name.setText(mUser.getDepartment());
-        }
-
         mRecyclerView = rootView.findViewById(R.id.memo_list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         assert mRecyclerView != null;
 
         no_memos = rootView.findViewById(R.id.no_memos);
 
-        setupRecyclerView(mRecyclerView);
+        if(mUser != null){
+            TextView dept_name = rootView.findViewById(R.id.dept_memos_title);
+            dept_name.setText(mUser.getDepartment());
+
+            new SummaryFetchTask().execute(mUser.getId());
+
+            setupRecyclerView(mRecyclerView);
+        }
 
         final AppBarLayout appBar = rootView.findViewById(R.id.app_bar);
 
@@ -161,6 +165,81 @@ public class DashboardFragment extends Fragment implements MemoAdapter.ItemClick
                 if(result.size() < 1){
                     no_memos.setVisibility(View.VISIBLE);
                 }
+            }
+            else{
+                Log.d("WOURA", "Found no memos");
+                no_memos.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+//            showProgress(false);
+        }
+    }
+
+
+    public class SummaryFetchTask extends AsyncTask<String, Void, String[]> {
+        private final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        @Override
+        protected String[] doInBackground(String... params) {
+            OkHttpClient client = new OkHttpClient();
+            SharedPreferences prefs = getDefaultSharedPreferences(getActivity().getApplicationContext());
+            String url = prefs.getString("ip", null);
+            String user_id = params[0];
+
+            if(url == null || user_id == null)
+                return null;
+
+            url += "/api/my_memo_summaries.php?user_id=" + user_id;
+
+            Request.Builder builder = new Request.Builder();
+            builder.url(url);
+            Request request = builder.build();
+
+            try {
+                Response response = client.newCall(request).execute();
+
+                if(response.body() != null) {
+                    String response_str = response.body().string();
+
+                    JSONArray jsonArray = new JSONArray(response_str);
+                    String[] res = new String[jsonArray.length()];
+                    for (int i = 0; i < jsonArray.length(); i++){
+                        String item = jsonArray.getString(i);
+                        res[i] = item;
+                    }
+
+                    return res;
+                }
+
+                return null;
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final String[] result) {
+            if(result != null){
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int i = 0; i < result.length; i++){
+                            if (i == 0){
+                                ((TextView) rootView.findViewById(R.id.inbox_memos_count)).setText(result[i] + "");
+                            }else if(i == 1){
+                                ((TextView) rootView.findViewById(R.id.dept_memos_count)).setText(result[i] + "");
+                            }
+                            else if(i == 2){
+                                ((TextView) rootView.findViewById(R.id.draft_memos_count)).setText(result[i] + "");
+                            }
+                        }
+                    }
+                });
             }
             else{
                 Log.d("WOURA", "Found no memos");

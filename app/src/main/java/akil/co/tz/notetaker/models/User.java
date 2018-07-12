@@ -12,6 +12,7 @@ public class User implements Serializable {
     private String department;
     private String job;
     private String role;
+    private int role_id;
     private int status;
     private int activation;
     private Boolean activated;
@@ -22,7 +23,7 @@ public class User implements Serializable {
 
 //    @JsonCreator
     public User(String id, String name, String email, String phone, String department, String job,
-                String role, int status, int activation, Boolean activated) {
+                String role, int role_id, int status, int activation, Boolean activated) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -33,6 +34,7 @@ public class User implements Serializable {
         this.status = status;
         this.activation = activation;
         this.activated = activated;
+        this.role_id = role_id;
     }
 
     public String getId() {
@@ -89,6 +91,14 @@ public class User implements Serializable {
 
     public String getRole() {
         return role;
+    }
+
+    public int getRoleId() {
+        return role_id;
+    }
+
+    public boolean isAdmin() {
+        return role_id == 4;
     }
 
     public void setRole(String role) {

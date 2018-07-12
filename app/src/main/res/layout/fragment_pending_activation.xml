@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="#fff"
+    tools:context=".PendingActivationFragment">
+
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_user_large"
+        android:layout_marginBottom="8dp"
+        android:tint="@color/colorPrimary"/>
+
+    <TextView
+        android:id="@+id/hello_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello there,"
+        android:layout_marginBottom="8dp"
+        android:textSize="30dp"
+        android:textColor="#333"/>
+
+    <TextView
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/not_verified_message"
+        android:textSize="18dp"
+        android:textColor="#555"
+        android:layout_marginBottom="20dp"/>
+
+    <Button
+        android:id="@+id/logout_btn"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginBottom="22dp"
+        android:background="@drawable/rounded_border"
+        android:textColor="#fff"
+        android:text="LOGOUT"
+        android:onClick="logout"
+        android:elevation="0dp"/>
+</LinearLayout>

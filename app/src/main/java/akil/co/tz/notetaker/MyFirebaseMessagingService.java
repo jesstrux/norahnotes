@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.Map;
 
 import akil.co.tz.notetaker.Utils.NotificationUtil;
+import akil.co.tz.notetaker.models.Memo;
 import akil.co.tz.notetaker.models.Notification;
 import akil.co.tz.notetaker.models.User;
 import androidx.navigation.NavDeepLinkBuilder;
@@ -46,33 +47,66 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String type = remoteMessage.getData().get("action_type");
 
             if (type != null && type.equals(NotificationUtil.TYPE_ACTIVATE_USER)){
-                processVerifiedUser();
+                processVerifiedUser(remoteMessage.getData());
+                return;
+            }
+            else if (type != null && type.equals(NotificationUtil.TYPE_USER_REGISTERED)){
+                openVerifyUser(remoteMessage.getData());
                 return;
             }
 
-            if(!notificationUtil.isDozed(getApplicationContext())){
-                sendNotification(remoteMessage.getData());
-                Log.d(TAG, "Not offline, sending notification.");
-            }else{
-                Log.d(TAG, "Offline, saving only.");
-            }
+            sendNotification(remoteMessage.getData(), notificationUtil.isDozed(getApplicationContext()));
         }
     }
 
+    private void openVerifyUser(Map<String, String> receivedMessage) {
+        String title = receivedMessage.get("title");
+        String message = receivedMessage.get("message");
+        String type = receivedMessage.get("action_type");
+        String user_data = receivedMessage.get("embeded_data");
 
-    private void processVerifiedUser() {
+        NavDeepLinkBuilder deepLinkBuilder = new NavDeepLinkBuilder(this)
+                .setGraph(R.navigation.navigation_graph);
+
+        deepLinkBuilder.setDestination(R.id.VerifyUserFragment);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user", new Gson().fromJson(user_data, User.class));
+
+        deepLinkBuilder.setArguments(bundle);
+
+        PendingIntent pendingIntent = deepLinkBuilder.createPendingIntent();
+
+        String channelId = "admin";
+        Uri defaultSoundUri = Uri.parse("android.resource://"+getApplicationContext().getPackageName()+"/"+R.raw.unconvinced);
+
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this, channelId)
+                        .setSmallIcon(R.drawable.small_logo)
+                        .setContentTitle(title)
+                        .setContentText(message)
+                        .setAutoCancel(true)
+                        .setNumber(notificationUtil.getUnreadCount(getApplicationContext()))
+                        .setSound(defaultSoundUri)
+                        .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify("SMEMO", 0, notificationBuilder.build());
+    }
+
+
+    private void processVerifiedUser(Map<String, String> receivedMessage) {
+        String user_data = receivedMessage.get("embeded_data");
+
         Log.d("WOURA", "Received ACTIVATE_USER notification");
-        final SharedPreferences prefs = getDefaultSharedPreferences(getApplicationContext());
 
-        String strJson = prefs.getString("saved_user",null);
-        Gson gson = new Gson();
         User user;
+        user = new Gson().fromJson(user_data, User.class);
         try {
-            user = gson.fromJson(strJson, User.class);
-            user.setActivated(true);
-
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putString("saved_user", gson.toJson(user));
+            editor.putString("saved_user", user_data);
             editor.apply();
 
             if(user.getRole() != null)
@@ -80,7 +114,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             if(user.getDepartment() != null)
                 FirebaseMessaging.getInstance().subscribeToTopic(user.getDepartment().replaceAll("\\s+",""));
 
-            sendNotification("You have been activated!", "Hey " + user.getFirstName() + ", we will progress you in a moment.", NotificationUtil.TYPE_ACTIVATE_USER);
+            if(user.isAdmin()){
+                FirebaseMessaging.getInstance().subscribeToTopic("Admin");
+            }
+
+            sendNotification("You have been activated!", "Hey " + user.getFirstName() + ", we will progress you in a moment.", NotificationUtil.TYPE_ACTIVATE_USER, null);
 
             Intent intent = new Intent("userActivated");
             Bundle bundle = new Bundle();
@@ -92,7 +130,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void sendNotification(Map<String, String> receivedMessage) {
+    private void sendNotification(Map<String, String> receivedMessage, boolean isDozed) {
         String title = receivedMessage.get("title");
         String message = receivedMessage.get("message");
         String type = receivedMessage.get("action_type");
@@ -108,22 +146,36 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Intent intent = new Intent("notificationCountAdded");
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
-        sendNotification(title, message, type);
+        if(!isDozed)
+            sendNotification(title, message, type, data);
     }
 
-    private void sendNotification(String title, String messageBody, String type) {
+    private void sendNotification(String title, String messageBody, String type, String data) {
         Intent intent = new Intent(this, SplashScreen.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        // PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
         NavDeepLinkBuilder deepLinkBuilder = new NavDeepLinkBuilder(this)
                 .setGraph(R.navigation.navigation_graph);
 
-        if(type != null && type.equals(NotificationUtil.TYPE_MEMO_RECEIVED))
-            deepLinkBuilder.setDestination(R.id.navigation_memos);
+        if(type != null && type.equals(NotificationUtil.TYPE_MEMO_RECEIVED)){
+            if(data != null){
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("memo", new Gson().fromJson(data, Memo.class));
+                deepLinkBuilder.setArguments(bundle);
+                deepLinkBuilder.setDestination(R.id.memoReadFragment);
+            }else{
+                deepLinkBuilder.setDestination(R.id.navigation_memos);
+            }
+        }
         else if(type != null && type.equals(NotificationUtil.TYPE_MEMO_REPLIED)){
-            deepLinkBuilder.setDestination(R.id.navigation_memos); // TODO Replace this with deep link into memo read page
+            if(data != null){
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("memo", new Gson().fromJson(data, Memo.class));
+                deepLinkBuilder.setArguments(bundle);
+                deepLinkBuilder.setDestination(R.id.memoProgressFragment);
+            }else{
+                deepLinkBuilder.setDestination(R.id.navigation_memos);
+            }
         }
         else if(type != null && type.equals(NotificationUtil.TYPE_USER_REGISTERED))
             deepLinkBuilder.setDestination(R.id.navigation_admin);

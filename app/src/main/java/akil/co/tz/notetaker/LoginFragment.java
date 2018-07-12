@@ -269,6 +269,11 @@ public class LoginFragment extends Fragment {
                 if(result.getDepartment() != null)
                     FirebaseMessaging.getInstance().subscribeToTopic(result.getDepartment().replaceAll("\\s+",""));
 
+                if(result.isAdmin() || result.getRoleId() == 4){
+                    FirebaseMessaging.getInstance().subscribeToTopic("Admin");
+                }
+
+                showProgress(false);
                 goIn(result);
             } else {
                 showProgress(false);
@@ -277,11 +282,12 @@ public class LoginFragment extends Fragment {
             }
         }
 
-        private void goIn(User user){
-//            rootView.findNa
-//            getActivity().recreate();
-
-            ((BaseActivity)getActivity()).login();
+        private void goIn(User mUser){
+            if(mUser.isActivated() != null && mUser.isActivated()){
+                ((BaseActivity)getActivity()).login(mUser);
+            }else{
+                ((BaseActivity)getActivity()).showPending(mUser);
+            }
         }
 
         @Override

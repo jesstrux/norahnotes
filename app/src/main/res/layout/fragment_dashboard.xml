@@ -83,7 +83,7 @@
                             android:minHeight="130dp">
 
                             <TextView
-                                android:id="@+id/other_memos_count"
+                                android:id="@+id/inbox_memos_count"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="No"
@@ -94,7 +94,7 @@
                                 android:gravity="center"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Office Announcements"
+                                android:text="Inbox Memos"
                                 android:layout_marginRight="12dp"
                                 android:layout_marginLeft="12dp"
                                 android:layout_marginBottom="12dp"
@@ -154,7 +154,7 @@
                             android:minHeight="130dp">
 
                             <TextView
-                                android:id="@+id/replied_memos_count"
+                                android:id="@+id/draft_memos_count"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="No"
@@ -165,7 +165,7 @@
                                 android:gravity="center"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Replies To Your Memos"
+                                android:text="Memo Drafts"
                                 android:layout_marginRight="12dp"
                                 android:layout_marginLeft="12dp"
                                 android:textSize="18dp"

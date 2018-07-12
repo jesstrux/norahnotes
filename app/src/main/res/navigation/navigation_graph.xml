@@ -61,4 +61,20 @@
         android:label="MemoProgressFragment" >
         <argument android:name="memo" />
     </fragment>
+
+    <fragment
+        android:id="@+id/pendingActivationFragment"
+        android:name="akil.co.tz.notetaker.PendingActivationFragment"
+        android:label="fragment_pending_activation"
+        tools:layout="@layout/fragment_pending_activation">
+        <argument android:name="name" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/VerifyUserFragment"
+        android:name="akil.co.tz.notetaker.VerifyUserFragment"
+        android:label="fragment_verify_user"
+        tools:layout="@layout/fragment_verify_user">
+        <argument android:name="user" />
+    </fragment>
 </navigation>

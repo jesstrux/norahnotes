@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -38,13 +39,22 @@ import android.widget.TextView;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import akil.co.tz.notetaker.Utils.NotificationUtil;
+import akil.co.tz.notetaker.models.Memo;
 import akil.co.tz.notetaker.models.User;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import me.leolin.shortcutbadger.ShortcutBadger;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 
@@ -121,6 +131,9 @@ public class BaseActivity extends AppCompatActivity {
         ShortcutBadger.removeCount(getApplicationContext()); //for 1.1.4+
 //        ShortcutBadger.with(getApplicationContext()).remove();  //for 1.1.3
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                activatedReceiver, new IntentFilter("userActivated"));
+
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(
                 mMessageReceiver, new IntentFilter("notificationCountAdded"));
 
@@ -130,19 +143,28 @@ public class BaseActivity extends AppCompatActivity {
         if (strJson != null) {
             mUser = new Gson().fromJson(strJson, User.class);
 
-            if(mUser != null && mUser.getRole() != null){
-                if(mUser.getRole().equals("Admin")){
-                    navigation.getMenu().getItem(2).setVisible(true);
-                    mNotificationsIdx = 3;
+            if(mUser != null){
+                Log.d("WOURA", "User role is: " + mUser.getRoleId());
+
+                if(mUser.isActivated() != null && mUser.isActivated()){
+                    login(mUser);
+                }else{
+                    showPending(mUser);
                 }
+            }else{
+                logout();
             }
 
-            showNotificationCount(notificationUtil.getUnreadCount(getApplicationContext()));
-
-            showNav();
         }else{
             logout();
         }
+    }
+
+    public void showPending(User user){
+        hideNav();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("name", user.getFirstName());
+        navController.navigate(R.id.pendingActivationFragment, bundle);
     }
 
     private void showNotificationCount(int count){
@@ -171,6 +193,16 @@ public class BaseActivity extends AppCompatActivity {
         }
     };
 
+    private BroadcastReceiver activatedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            NotificationManager n = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            n.cancel("SMEMO", 0);
+
+            login(mUser);
+        }
+    };
+
     public void logout(View view){
         logout();
     }
@@ -180,8 +212,19 @@ public class BaseActivity extends AppCompatActivity {
             notifications_badge.hide(true);
     }
 
-    public void login(){
-        navigation.setSelectedItemId(R.id.navigation_dashboard);
+    public void login(User user){
+//        navigation.setSelectedItemId(R.id.navigation_dashboard);
+//        showNav();
+
+        if(user.isAdmin()){
+            navigation.getMenu().getItem(2).setVisible(true);
+            mNotificationsIdx = 3;
+        }
+
+        showNotificationCount(notificationUtil.getUnreadCount(getApplicationContext()));
+
+        navController.navigate(R.id.navigation_dashboard);
+
         showNav();
     }
 
@@ -264,11 +307,16 @@ public class BaseActivity extends AppCompatActivity {
 
     private void logout(){
         if(mUser != null){
+            new LogoutTask().execute(mUser.getId());
+
             if(mUser.getDepartment() != null)
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(mUser.getDepartment().replaceAll("\\s+",""));
 
             if(mUser.getRole() != null)
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(mUser.getRole().replaceAll("\\s+",""));
+
+            if (mUser.isAdmin())
+                FirebaseMessaging.getInstance().unsubscribeFromTopic("Admin");
         }
 
         SharedPreferences.Editor editor = prefs.edit();
@@ -283,6 +331,47 @@ public class BaseActivity extends AppCompatActivity {
         navController.navigate(R.id.loginFragment);
 
         hideNav();
+    }
+
+    public class LogoutTask extends AsyncTask<String, Void, Void> {
+        private final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        @Override
+        protected Void doInBackground(String... params) {
+            OkHttpClient client = new OkHttpClient();
+            SharedPreferences prefs = getDefaultSharedPreferences(getApplicationContext());
+            String url = prefs.getString("ip", null);
+            String user_id = params[0];
+
+            if(url == null || user_id == null)
+                return null;
+
+            url += "/api/logout.php?user_id=" + user_id;
+
+            Request.Builder builder = new Request.Builder();
+            builder.url(url);
+            Request request = builder.build();
+
+            try {
+                Response response = client.newCall(request).execute();
+
+                return null;
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void res) {
+            hideProgress();
+        }
+
+        @Override
+        protected void onCancelled() {
+//            showProgress(false);
+        }
     }
 
 }

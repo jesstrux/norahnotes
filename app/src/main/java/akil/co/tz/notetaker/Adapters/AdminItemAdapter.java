@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,8 +66,9 @@ public class AdminItemAdapter
         holder.mIconView.setImageResource(icon);
         holder.itemView.setTag(adminItem);
 
-        if(adminItem.getType().equals("Staff")){
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+        if(adminItem.getType().equals("Staff") && adminItem.getUser() != null && !adminItem.getUser().isActivated()){
+            holder.mButton.setVisibility(View.VISIBLE);
+            holder.mButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if(mListener != null)
@@ -84,11 +86,13 @@ public class AdminItemAdapter
     class ViewHolder extends RecyclerView.ViewHolder {
         final ImageView mIconView;
         final TextView mTitleView;
+        final Button mButton;
 
         ViewHolder(View view) {
             super(view);
             mIconView = view.findViewById(R.id.icon_view);
             mTitleView = view.findViewById(R.id.title_text);
+            mButton = view.findViewById(R.id.activate_btn);
         }
     }
 }

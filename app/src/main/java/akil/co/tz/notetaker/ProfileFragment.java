@@ -76,8 +76,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         final AppBarLayout appBar = rootView.findViewById(R.id.app_bar);
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
 
-//        logout_btn = rootView.findViewById(R.id.logout_btn);
-//        logout_btn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.adminFragment));
+//        activate_btn = rootView.findViewById(R.id.activate_btn);
+//        activate_btn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.adminFragment));
 
         NestedScrollView note_detail_container = rootView.findViewById(R.id.nested_scroll_view);
         note_detail_container.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {

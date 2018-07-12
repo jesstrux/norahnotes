@@ -273,7 +273,7 @@ public class AdminFragment extends Fragment {
 
         private void showDialog(int pos, AdminItem item){
             FragmentManager fm = getActivity().getSupportFragmentManager();
-            StaffDialog staffDialog = StaffDialog.newInstance(pos, item.getUser());
+            StaffDialog staffDialog = StaffDialog.newInstance(item.getUser());
             staffDialog.show(fm, "view_staff");
         }
 

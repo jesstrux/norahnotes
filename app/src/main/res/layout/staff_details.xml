@@ -164,7 +164,7 @@
 
         <TextView
             android:id="@+id/cancel_btn"
-            android:text="CANCEL"
+            android:text="CLOSE"
             android:textColor="#000"
             android:textSize="16dp"
             android:padding="20dp"
