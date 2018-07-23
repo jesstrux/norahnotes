@@ -1,5 +1,8 @@
 package akil.co.tz.notetaker;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -10,18 +13,28 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.transition.ChangeBounds;
+import android.support.transition.Slide;
+import android.support.transition.TransitionManager;
+import android.support.transition.TransitionSet;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,12 +61,16 @@ import okhttp3.ResponseBody;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
-public class MemoReadFragment extends Fragment {
+public class MemoReadFragment extends Fragment implements View.OnClickListener {
     Memo mItem;
     FloatingActionButton replyBtn;
-    Button showRepliesBtn;
+    Button showRepliesBtn, btnAccept, btnReject, btnWrite;
     boolean is_sent = false;
     OkHttpClient client = new OkHttpClient();
+
+    FrameLayout replyOptionsWrapper;
+    CardView replyOptions;
+    View replyOptionsCloser;
 
     private View rootView;
 
@@ -80,6 +97,19 @@ public class MemoReadFragment extends Fragment {
                 goBack();
             }
         });
+
+        replyOptionsWrapper = rootView.findViewById(R.id.reply_options_wrapper);
+        replyOptions = rootView.findViewById(R.id.reply_options);
+
+        replyOptionsCloser = rootView.findViewById(R.id.reply_options_closer);
+        btnAccept = rootView.findViewById(R.id.btn_accept);
+        btnReject = rootView.findViewById(R.id.btn_reject);
+        btnWrite = rootView.findViewById(R.id.btn_write);
+
+        replyOptionsCloser.setOnClickListener(this);
+        btnAccept.setOnClickListener(this);
+        btnReject.setOnClickListener(this);
+        btnWrite.setOnClickListener(this);
 
         final TextView title = rootView.findViewById(R.id.title);
 
@@ -285,6 +315,35 @@ public class MemoReadFragment extends Fragment {
     }
 
     private void showUfsReplies() {
+//        TransitionSet transitionSet = new TransitionSet();
+//
+//        Slide transition = new Slide(Gravity.BOTTOM);
+//        transition.addTarget(replyOptions);
+//        transitionSet.addTransition(transition);
+//
+        ChangeBounds transition2 = new ChangeBounds();
+        transition2.setDuration(200L);
+        transition2.addTarget(replyOptionsCloser);
+//
+//        transitionSet.setOrdering(TransitionSet.ORDERING_TOGETHER);
+//
+//        Animation slide = new TranslateAnimation(0, 0, 0, 64);
+//        slide.setInterpolator(new LinearInterpolator());
+//
+        TransitionManager.beginDelayedTransition(replyOptionsWrapper, transition2);
+        replyOptionsWrapper.setVisibility(View.VISIBLE);
+
+        replyOptions.setScaleX(0.5f);
+        replyOptions.setScaleY(0.5f);
+        replyOptions.setTranslationX(replyOptions.getWidth() / 3);
+        replyOptions.setTranslationY(replyOptions.getHeight() / 3);
+        replyOptions.setAlpha(0f);
+        replyOptions.setVisibility(View.VISIBLE);
+        replyOptions.animate().setDuration(150).scaleX(1).scaleY(1).translationX(0f).translationY(0f).alpha(1)
+                .setInterpolator(new LinearOutSlowInInterpolator());
+    }
+
+    private void showUfsRepliesOld() {
         final CharSequence[] items = {
                 "Approve", "Reject", "Comment"
         };
@@ -316,6 +375,45 @@ public class MemoReadFragment extends Fragment {
                 }
             },
         100);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btn_accept:
+                new MemoReplyTask().execute(mItem.getId(), 2);
+                break;
+            case R.id.btn_reject:
+                new MemoReplyTask().execute(mItem.getId(), 3);
+                break;
+            case R.id.btn_write:
+                Bundle b = new Bundle();
+                b.putSerializable("memo", mItem);
+                Navigation.findNavController(rootView).navigate(R.id.memoReplyFragment, b);
+                break;
+            case R.id.reply_options_closer:
+                TransitionManager.beginDelayedTransition(replyOptionsWrapper);
+                ChangeBounds transition2 = new ChangeBounds();
+                transition2.setDuration(200L);
+                transition2.addTarget(replyOptionsCloser);
+
+                replyOptionsCloser.setVisibility(View.INVISIBLE);
+
+                replyOptions.setVisibility(View.INVISIBLE);
+                replyOptions.animate().setDuration(150).scaleX(0.5f).scaleY(0.5f)
+                        .translationX(replyOptions.getWidth() / 3)
+                        .translationY(showRepliesBtn.getHeight() / 3)
+                        .alpha(1)
+                        .setInterpolator(new LinearOutSlowInInterpolator())
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                replyOptionsCloser.setVisibility(View.GONE);
+                            }
+                        });
+                break;
+        }
     }
 
     public class MemoReplyTask extends AsyncTask<Integer, Void, String> {

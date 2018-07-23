@@ -98,7 +98,7 @@ public class DashboardFragment extends Fragment implements MemoAdapter.ItemClick
         if(mUser != null)
             new MemoFetchTask().execute(mUser.getId());
 
-        no_memos.setText("No recent memos found!");
+//        no_memos.setText("No recent memos found!");
 
         memoAdapter = new MemoAdapter(memoList, MemoAdapter.MEMO_ITEM_TYPE_FLAT);
         memoAdapter.setItemClickCallback(this);
@@ -168,8 +168,10 @@ public class DashboardFragment extends Fragment implements MemoAdapter.ItemClick
             }
             else{
                 Log.d("WOURA", "Found no memos");
-                no_memos.setVisibility(View.VISIBLE);
+                no_memos.setVisibility(View.GONE);
             }
+
+            no_memos.setVisibility(View.GONE);
         }
 
         @Override

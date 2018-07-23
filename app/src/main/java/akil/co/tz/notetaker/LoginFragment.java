@@ -55,7 +55,7 @@ public class LoginFragment extends Fragment {
 
     OkHttpClient client = new OkHttpClient();
 
-    private String login_url= "http://192.168.8.104:9000/api/login.php";
+    private String login_url= "http://192.168.8.103:9000/api/login.php";
     private String admin_user = "wakyj07@gmail.com";
     private String staff_user = "anabee@gmail.com";
 
@@ -78,7 +78,7 @@ public class LoginFragment extends Fragment {
             login_image.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    mIpView.setText("http://192.168.8.104:9000");
+                    mIpView.setText("http://192.168.8.103:9000");
                     mEmailView.setText(admin_user);
                     mPasswordView.setText("@ttss;86%");
                     attemptLogin();
@@ -226,7 +226,7 @@ public class LoginFragment extends Fragment {
 
                 SharedPreferences prefs = getDefaultSharedPreferences(getActivity().getApplicationContext());
                 if(mUrl.length() < 1)
-                    prefs.edit().putString("ip", "http://192.168.8.104:9000").commit();
+                    prefs.edit().putString("ip", "http://192.168.8.103:9000").commit();
                 else
                     prefs.edit().putString("ip", mUrl).commit();
 

@@ -209,6 +209,7 @@
                 android:text="No recent memos found."/>
 
             <android.support.v7.widget.RecyclerView
+                android:background="#fff"
                 android:id="@+id/memo_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

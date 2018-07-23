@@ -48,6 +48,13 @@
         android:name="akil.co.tz.notetaker.MemoReadFragment"
         android:label="MemoReadFragment" >
         <argument android:name="memo" />
+        <action
+            android:id="@+id/action_memoReadFragment_to_memoProgressFragment"
+            app:destination="@id/memoProgressFragment"
+            app:enterAnim="@anim/nav_default_enter_anim" />
+        <action
+            android:id="@+id/action_memoReadFragment_self"
+            app:destination="@id/memoReadFragment" />
     </fragment>
     <fragment
         android:id="@+id/memoReplyFragment"
