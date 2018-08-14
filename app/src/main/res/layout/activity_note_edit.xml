@@ -20,7 +20,7 @@
             android:background="#fff"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
-            android:paddingLeft="16dp"
+            android:paddingLeft="8dp"
             android:paddingRight="16dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
@@ -48,12 +48,12 @@
                 android:minHeight="0dp"
                 android:padding="0dp"
                 android:background="@android:color/transparent"
-                android:textColor="#333"
-                android:textSize="19dp"
-                android:text="SAVE NOTE"
+                android:textColor="@color/colorAccent"
+                android:textSize="17dp"
+                android:text="SAVE SONG"
                 android:layout_marginRight="6dp"
                 android:letterSpacing="0.05"
-                android:fontFamily="@font/brandon_regular"/>
+                android:fontFamily="@font/os"/>
 
             <ImageButton
                 android:id="@+id/boldBtn"
@@ -89,15 +89,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp"
             android:paddingTop="8dp"
             android:background="#fff">
-            <EditText
+
+            <TextView
                 android:id="@+id/title"
+                android:paddingLeft="28dp"
+                android:paddingRight="24dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter title here"
+                android:hint="No song title"
                 android:textSize="24dp"
                 android:textColor="#333"
                 android:background="#fff"
@@ -107,7 +108,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#ddd"/>
+                android:background="#e7e7e7"/>
         </LinearLayout>
     </LinearLayout>
 

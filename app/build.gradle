@@ -62,6 +62,10 @@ dependencies {
     implementation 'com.nabinbhandari.android:permissions:3.5'
 
     implementation 'me.dm7.barcodescanner:zxing:1.9.8'
+
+    implementation ('com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.3@aar'){
+        transitive = true
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'

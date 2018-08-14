@@ -61,9 +61,12 @@ public class SongAdapter
         Song item = mValues.get(position);
         String title = item.getTitle();
         Boolean has_title = title != null;
+        String description = item.getDescription();
 
-        if(has_title)
+        if(has_title){
             holder.mIdView.setText(title);
+            holder.mIconView.setText(title.substring(0,1));
+        }
         else{
             holder.mIdView.setVisibility(View.GONE);
 
@@ -71,8 +74,12 @@ public class SongAdapter
             holder.mContentView.setMaxLines(3);
         }
 
-        if(item.getDescription() != null)
-            holder.mContentView.setText(item.getDescription());
+        if(description != null)
+            holder.mContentView.setText(description.replace("\n", " "));
+
+        if (position == getItemCount()){
+            holder.mSeparatorView.setVisibility(View.GONE);
+        }
 
         holder.itemView.setTag(item);
         holder.itemView.setOnClickListener(mOnClickListener);
@@ -86,11 +93,15 @@ public class SongAdapter
     class ViewHolder extends RecyclerView.ViewHolder {
         final TextView mIdView;
         final TextView mContentView;
+        final View mSeparatorView;
+        final TextView mIconView;
 
         ViewHolder(View view) {
             super(view);
             mIdView = view.findViewById(R.id.id_text);
             mContentView = view.findViewById(R.id.content);
+            mSeparatorView = view.findViewById(R.id.separator);
+            mIconView = view.findViewById(R.id.icon);
         }
     }
 }

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,7 +30,8 @@ import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 public class NoteEditActivity extends AppCompatActivity {
     String mTitle, mId, mDescription;
     private LinearLayout title_bar;
-    private EditText title, content;
+    private TextView title;
+    private EditText content;
     int note_id = -1;
     Button saveBtn;
     AppDatabase db;
